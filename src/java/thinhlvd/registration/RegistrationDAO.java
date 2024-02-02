@@ -7,12 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.naming.NamingException;
 import thinhlvd.util.DBHelper;
 
 public class RegistrationDAO implements Serializable {
     
     public boolean checkLogin(String username, String password)
-            throws SQLException, ClassNotFoundException {
+            throws SQLException, /*ClassNotFoundException*/ NamingException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -59,7 +60,7 @@ public class RegistrationDAO implements Serializable {
     }
     
     public void searchLastname(String searchValue)
-            throws SQLException, ClassNotFoundException {
+            throws SQLException, /*ClassNotFoundException*/ NamingException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;

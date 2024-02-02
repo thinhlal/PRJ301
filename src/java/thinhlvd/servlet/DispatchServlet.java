@@ -19,25 +19,26 @@ import javax.servlet.http.HttpServletResponse;
  * @author ACER
  */
 @WebServlet(name = "DispatchServlet", urlPatterns = {"/DispatchServlet"})
-public class DispatchServlet extends HttpServlet{
+public class DispatchServlet extends HttpServlet {
+
     private final String LOGIN_PAGE = "login.html";
     private final String LOGIN_CONTROLLER = "LoginServlet";
     private final String SEARCH_LASTNAME_CONTROLLER = "SearchLastnameServlet";
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         //1. Which button did user click;
         String button = request.getParameter("btAction");
         String url = LOGIN_PAGE;
         
         try {
-            if (button == null){//first time or apps starts up
+            if (button == null) {//first time or apps starts up
                 //transfer login page
-            }else if (button.equals("Login")){//user clicked Login
+            } else if (button.equals("Login")) {//user clicked Login
                 url = LOGIN_CONTROLLER;
-            }else if (button.equals("Search")){//user clicked Search
+            } else if (button.equals("Search")) {//user clicked Search
                 url = SEARCH_LASTNAME_CONTROLLER;
             }
         } finally {
