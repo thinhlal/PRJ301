@@ -7,47 +7,63 @@ package thinhlvd.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import thinhlvd.registration.RegistrationDAO;
 
 /**
  *
  * @author ACER
  */
-@WebServlet(name = "DispatchServlet", urlPatterns = {"/DispatchServlet"})
-public class DispatchServlet extends HttpServlet {
+@WebServlet(name = "DeleteAccountServlet", urlPatterns = {"/DeleteAccountServlet"})
+public class DeleteAccountServlet extends HttpServlet {
+    private final String ERROR_PAGE = "errors.html";
 
-    private final String LOGIN_PAGE = "login.html";
-    private final String LOGIN_CONTROLLER = "LoginServlet";
-    private final String SEARCH_LASTNAME_CONTROLLER = "SearchLastnameServlet";
-    private final String DELETE_ACCOUNT_CONTROLLER = "DeleteAccountServlet";
-
-
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        //1.Get all parameter
+        String username = request.getParameter("pk");
+        String searchValue = request.getParameter("lastSearchValue");
+        String url = ERROR_PAGE;
 
-        //1. Which button did user click;
-        String button = request.getParameter("btAction");
-        String url = LOGIN_PAGE;
-        
         try {
-            if (button == null) {//first time or apps starts up
-                //transfer login page
-            } else if (button.equals("Login")) {//user clicked Login
-                url = LOGIN_CONTROLLER;
-            } else if (button.equals("Search")) {//user clicked Search
-                url = SEARCH_LASTNAME_CONTROLLER;
-            } else if (button.equals("delete")) {//user clicked delete
-                url = DELETE_ACCOUNT_CONTROLLER;
-            }
+            //2.Call model
+            //2.1 new Dao object
+            RegistrationDAO dao = new RegistrationDAO();
+            //2.2 call methods of DAO
+            boolean result = dao.deleteAccount(username);
+            //3. process Result
+            if (result) {
+                // call previous functions again using URL Rewriting technique
+                url = "DispatchServlet"
+                        + "?btAction=Search"
+                        + "&txtSearchValue=" + searchValue;
+            }//end delete is success
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            //forward k sai duoc boi vi trung parameter 
+            //btAction tao ra mang va k biet thu tu va lay gtri dau tien va k biet delete hay search truoc
+            response.sendRedirect(url);
         }
     }
 
