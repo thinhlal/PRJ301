@@ -5,6 +5,7 @@
 --%>
 
 <%@page import="thinhlvd.registration.RegistrationDTO"%>
+<%@ page session="false" %>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -15,6 +16,9 @@
     </head>
     <body>
         <%
+            //neu http request o trang jsp thi Container se tu dong 
+            //tao new session voi jsessionid 
+            //vi vay phai tat thong qua <%@ page session="false" 
             Cookie[] cookies = request.getCookies();
             if(cookies != null){
                 Cookie lastCookie = cookies[cookies.length - 1];

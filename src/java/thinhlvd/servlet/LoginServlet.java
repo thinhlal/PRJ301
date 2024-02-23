@@ -24,7 +24,7 @@ import thinhlvd.registration.RegistrationDAO;
 public class LoginServlet extends HttpServlet {
 
     private final String INVALID_PAGE = "invalid.html";
-    private final String SEARCH_PAGE = "search.html";
+    private final String SEARCH_PAGE = "search.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
                 url = SEARCH_PAGE;
                 //write cookies
                 Cookie cookie = new Cookie(username, password);
-                cookie.setMaxAge(60*3);
+                cookie.setMaxAge(60*1);
                 response.addCookie(cookie);
             }
         } catch (NamingException ex) {
@@ -63,10 +63,7 @@ public class LoginServlet extends HttpServlet {
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            //response.sendRedirect(url);
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
-            out.close();
+            response.sendRedirect(url);
         }
     }
 
