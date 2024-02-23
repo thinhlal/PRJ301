@@ -25,8 +25,8 @@ public class DispatchServlet extends HttpServlet {
     private final String LOGIN_CONTROLLER = "LoginServlet";
     private final String SEARCH_LASTNAME_CONTROLLER = "SearchLastnameServlet";
     private final String DELETE_ACCOUNT_CONTROLLER = "DeleteAccountServlet";
-
-
+    private final String STARTUP_CONTROLLER = "StartupController";
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -38,6 +38,8 @@ public class DispatchServlet extends HttpServlet {
         try {
             if (button == null) {//first time or apps starts up
                 //transfer login page
+                //check cookies to determine which page is tranfered
+                url = STARTUP_CONTROLLER;
             } else if (button.equals("Login")) {//user clicked Login
                 url = LOGIN_CONTROLLER;
             } else if (button.equals("Search")) {//user clicked Search

@@ -14,6 +14,18 @@
         <title>Search</title>
     </head>
     <body>
+        <%
+            Cookie[] cookies = request.getCookies();
+            if(cookies != null){
+                Cookie lastCookie = cookies[cookies.length - 1];
+                String username = lastCookie.getName();
+                %>
+                <font color="red">
+                    Welcome, <%= username %> 
+                </font>
+        <%
+            }//login is ok
+        %>
         <h1>Search</h1>
         <form action="DispatchServlet">
             Search Value <input type="text" name="txtSearchValue" 
@@ -37,6 +49,7 @@
                                 <th>Full name</th>
                                 <th>Role</th>
                                 <th>Delete</th>
+                                <th>Update</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,26 +61,44 @@
                                             + "&pk=" + dto.getUsername()//delete done
                                             + "&lastSearchValue=" + searchValue;//search after deleted
                                     %>
+                        <form action="DispatchServlet" method="POST">
                             <tr>
                                 <td>
                                     <%= ++count %>
                                 .</td>
                                 <td>
                                     <%= dto.getUsername() %>
+                                    <input type="hidden" name="txtUsername" 
+                                           value="<%= dto.getUsername() %>" />
                                 </td>
                                 <td>
-                                    <%= dto.getPassword() %>
+                                    <input type="text" name="txtPassword" 
+                                           value="<%= dto.getPassword() %>" />
                                 </td>
                                 <td>
                                     <%= dto.getFullName() %>
                                 </td>
                                 <td>
-                                    <%= dto.isRole() %>
+                                    <input type="checkbox" name="chkAdmin" value="ON" 
+                                           <%
+                                               if(dto.isRole()){
+                                                   %>
+                                                   checked="checked"
+                                           <%
+                                               }//role is an admin
+                                           %>
+                                           />
                                 </td>
                                 <td>
                                     <a href="<%= urlRewriting %>">Delete</a>
                                 </td>
-                            </tr>        
+                                <td>
+                                    <input type="submit" value="Update" name="btAction" />
+                                    <input type="hidden" name="lastSearchValue" 
+                                           value="<%= request.getParameter("txtSearchValue") %>" />
+                                </td>
+                            </tr>
+                        </form>    
                             <%
                                 }//end get each dto in result
                             %>

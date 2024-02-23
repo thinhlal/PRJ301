@@ -8,9 +8,11 @@ package thinhlvd.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,10 +23,10 @@ import thinhlvd.registration.RegistrationDAO;
  *
  * @author ACER
  */
-public class LoginServlet extends HttpServlet {
-
-    private final String INVALID_PAGE = "invalid.html";
-    private final String SEARCH_PAGE = "search.html";
+@WebServlet(name = "StartupController", urlPatterns = {"/StartupController"})
+public class StartupController extends HttpServlet {
+    private final String LOGIN_PAGE = "login.html";
+    private final String SEARCH_PAGE = "search.jsp";//welcome different user we use jsp
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,35 +40,29 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        //1. get all client information
-        String username = request.getParameter("txtUsername");
-        String password = request.getParameter("txtPassword");
-        String url = INVALID_PAGE;
-
+        String url = LOGIN_PAGE;
         try {
-            //2. Call Model
-            //2.1 New DAO Object
-            RegistrationDAO dao = new RegistrationDAO();
-            //2.2 Call method of DAO
-            boolean result = dao.checkLogin(username, password);
-            //3. process result
-            if (result) {
-                url = SEARCH_PAGE;
-                //write cookies
-                Cookie cookie = new Cookie(username, password);
-                cookie.setMaxAge(60*3);
-                response.addCookie(cookie);
-            }
-        } catch (NamingException ex) {
-            ex.printStackTrace();
+            //1. check cookies existed
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                //2. get name and value (username and password)
+                Cookie newestCokie = cookies[cookies.length - 1];
+                String username = newestCokie.getName();
+                String password = newestCokie.getValue();
+                //3. checkLogin (call Model)
+                RegistrationDAO dao = new RegistrationDAO();
+                boolean result = dao.checkLogin(username, password);
+                //4. process result
+                if (result) {
+                    url = SEARCH_PAGE;
+                }//authentication is ok
+            }//no first time
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
         } finally {
-            //response.sendRedirect(url);
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
-            out.close();
+            response.sendRedirect(url);
         }
     }
 
