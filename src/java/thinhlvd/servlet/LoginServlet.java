@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
                 url = SEARCH_PAGE;
                 //write cookies
                 Cookie cookie = new Cookie(username, password);
-                cookie.setMaxAge(60*1);
+                cookie.setMaxAge(60*3);
                 response.addCookie(cookie);
             }
         } catch (NamingException ex) {
