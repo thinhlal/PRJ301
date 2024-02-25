@@ -7,52 +7,63 @@ package thinhlvd.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import thinhlvd.registration.RegistrationDAO;
 
 /**
  *
- * @author ACER
+ * @author Admin'
  */
-@WebServlet(name = "DispatchServlet", urlPatterns = {"/DispatchServlet"})
-public class DispatchServlet extends HttpServlet {
+@WebServlet(name = "UpdateAccountServlet", urlPatterns = {"/UpdateAccountServlet"})
+public class UpdateAccountServlet extends HttpServlet {
+    private final String ERROR_PAGE = "errors.html";
 
-    private final String LOGIN_PAGE = "login.html";
-    private final String LOGIN_CONTROLLER = "LoginServlet";
-    private final String SEARCH_LASTNAME_CONTROLLER = "SearchLastnameServlet";
-    private final String DELETE_ACCOUNT_CONTROLLER = "DeleteAccountServlet";
-    private final String STARTUP_CONTROLLER = "StartupController";
-    private final String UPDATE_ACCOUNT_CONTROLLER = "UpdateAccountServlet";
-
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        //1. Which button did user click;
-        String button = request.getParameter("btAction");
-        String url = LOGIN_PAGE;
-
+        //1. Get all parameter
+        String username = request.getParameter("txtUsername");
+        String password = request.getParameter("txtPassword");
+        String isAdmin = request.getParameter("chkAdmin");
+        String searchValue = request.getParameter("lastSearchValue");
+        String url = ERROR_PAGE;
         try {
-            if (button == null) {//first time or apps starts up
-                //transfer login page
-                //check cookies to determine which page is tranfered
-                url = STARTUP_CONTROLLER;
-            } else if (button.equals("Login")) {//user clicked Login
-                url = LOGIN_CONTROLLER;
-            } else if (button.equals("Search")) {//user clicked Search
-                url = SEARCH_LASTNAME_CONTROLLER;
-            } else if (button.equals("Delete")) {//user clicked Delete
-                url = DELETE_ACCOUNT_CONTROLLER;
-            } else if (button.equals("Update")) {//user clicked Update
-                url = UPDATE_ACCOUNT_CONTROLLER;
-            }
+            //2. Call DAO
+            //2.1 New DAO
+            RegistrationDAO dao = new RegistrationDAO();
+            //2.2 Call method() of DAO
+            boolean result = dao.updateAccount(username, password, isAdmin);
+            //3. process result
+            if(result){
+                // call previous functions again using URL Rewriting technique
+                url = "DispatchServlet"
+                        + "?btAction=Search"
+                        + "&txtSearchValue=" + searchValue;
+            }//end update is success
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            //k sai forward trung parameter btAction se k biet thu tu search hay update truoc
+            response.sendRedirect(url);
         }
     }
 
