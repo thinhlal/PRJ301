@@ -5,7 +5,7 @@
 --%>
 
 <%@page import="thinhlvd.registration.RegistrationDTO"%>
-<%@page session="false" %>
+<%--<%@page session="false" %>--%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
