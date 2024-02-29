@@ -18,20 +18,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import thinhlvd.cart.CartObject;
 import thinhlvd.tbl_Product1.tbl_Product1DAO;
 import thinhlvd.tbl_Product1.tbl_Product1DTO;
 
 /**
  *
- * @author ACER
+ * @author Admin'
  */
-@WebServlet(name = "AddItemToCartServlet", urlPatterns = {"/AddItemToCartServlet"})
-public class AddItemToCartServlet extends HttpServlet {
+@WebServlet(name = "ShowAllProductsServlet", urlPatterns = {"/ShowAllProductsServlet"})
+public class ShowAllProductsServlet extends HttpServlet {
 
     private final String ERROR_PAGE = "errors.html";
-    private final String SHOW_PRODUCT_SERVLET = "ShowAllProductsServlet";
+    private final String PRODUCTS_PAGE = "products.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,35 +44,21 @@ public class AddItemToCartServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR_PAGE;
-
         try {
-            //1.Customer goes to the cart place
-            HttpSession session = request.getSession();//Gio hang o sieu thi luon luon phai co k duoc het gio hang
-            //2.Customer takes his/her cart
-            //call Model/DAO
-            CartObject cart = (CartObject) session.getAttribute("CART"); // lay gio
-            if (cart == null) {
-                cart = new CartObject();// gio chua co thi keu len
-            }//end cart has NOT existed
-            //3.Customer drops item to his/her cart
-            //sku id item
-            String item = request.getParameter("cboBook");
-            boolean result = false;
-            List<tbl_Product1DTO> products = (List<tbl_Product1DTO>) request.getAttribute("PRODUCTS");//nhan tat ca ttin product
-            for (tbl_Product1DTO product : products) {
-                if (product.getSku().equalsIgnoreCase(item)) {
-                    result = cart.addItemToCart(product);//thay doi cart -> setAttribute
-                    break;
-                }//tim thay day du ttin product co sku
-            }
-            if (result) {
-                session.setAttribute("CART", cart);
-                //4.Customer continuely take item to drop
-                url = SHOW_PRODUCT_SERVLET;
-            }//adding item is success
+            //1.CALL DAO tblProduct1 (new DAO)
+            tbl_Product1DAO dao = new tbl_Product1DAO();
+            //2.Call method of DAO
+            dao.getAllProducts();
+            List<tbl_Product1DTO> products = dao.getProducts();
+            url = PRODUCTS_PAGE;
+            request.setAttribute("PRODUCTS", products);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
         } finally {
-            //dung ca 2 cai nao cung duoc vi duoc luu trong session roi
-            response.sendRedirect(url);
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         }
     }
 
