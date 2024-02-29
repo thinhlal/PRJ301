@@ -7,59 +7,57 @@ package thinhlvd.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import thinhlvd.cart.CartObject;
 
 /**
  *
  * @author ACER
  */
-@WebServlet(name = "DispatchServlet", urlPatterns = {"/DispatchServlet"})
-public class DispatchServlet extends HttpServlet {
+@WebServlet(name = "AddItemToCartServlet", urlPatterns = {"/AddItemToCartServlet"})
+public class AddItemToCartServlet extends HttpServlet {
+    private final String ERROR_PAGE = "errors.html";
+    private final String PRODUCT_PAGE = "product.html";
 
-    private final String LOGIN_PAGE = "login.html";
-    private final String LOGIN_CONTROLLER = "LoginServlet";
-    private final String SEARCH_LASTNAME_CONTROLLER = "SearchLastnameServlet";
-    private final String DELETE_ACCOUNT_CONTROLLER = "DeleteAccountServlet";
-    private final String STARTUP_CONTROLLER = "StartupController";
-    private final String UPDATE_ACCOUNT_CONTROLLER = "UpdateAccountServlet";
-    private final String ADD_ITEM_TO_CART_CONTROLLER = "AddItemToCartServlet";
-    
-    private final String VIEW_YOUR_CART_PAGE = "viewCart.jsp";
-
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        //1. Which button did user click;
-        String button = request.getParameter("btAction");
-        String url = LOGIN_PAGE;
+        String url = ERROR_PAGE;
 
         try {
-            if (button == null) {//first time or apps starts up
-                //transfer login page
-                //check cookies to determine which page is tranfered
-                url = STARTUP_CONTROLLER;
-            } else if (button.equals("Login")) {//user clicked Login
-                url = LOGIN_CONTROLLER;
-            } else if (button.equals("Search")) {//user clicked Search
-                url = SEARCH_LASTNAME_CONTROLLER;
-            } else if (button.equals("Delete")) {//user clicked Delete
-                url = DELETE_ACCOUNT_CONTROLLER;
-            } else if (button.equals("Update")) {//user clicked Update
-                url = UPDATE_ACCOUNT_CONTROLLER;
-            } else if (button.equals("Add Book To Your Cart")) {//user clicked add item to cart
-                url = ADD_ITEM_TO_CART_CONTROLLER;
-            } else if (button.equals("View Your Cart")) {//user clicked view your cart
-                url = VIEW_YOUR_CART_PAGE;
-            }
+            //1.Customer goes to the cart place
+            HttpSession session = request.getSession();//Gio hang o sieu thi luon luon phai co k duoc het gio hang
+            //2.Customer takes his/her cart
+            //call Model/DAO
+            CartObject cart = (CartObject) session.getAttribute("CART");
+            if (cart == null) {
+                cart = new CartObject();
+            }//end cart has NOT existed
+            //3.Customer drops item to his/her cart
+            String item = request.getParameter("cboBook");
+            boolean result = cart.addItemToCart(item);//thay doi cart -> setAttribute
+            if (result) {
+                session.setAttribute("CART", cart);
+                //4.Customer continuely take item to drop
+                url = PRODUCT_PAGE;
+            }//adding item is success
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            //dung ca 2 cai nao cung duoc vi duoc luu trong session roi
+            response.sendRedirect(url);
         }
     }
 
