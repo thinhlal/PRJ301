@@ -61,7 +61,7 @@ public class CartObject implements Serializable {
         return result;
     }
 
-    public boolean removeItemFromCart(String id) {
+    public boolean removeItemFromCart(String sku) {
         boolean result = false;
 
         /*1. check existed items(ktra ngan chua do co ton tai khong items)
@@ -78,7 +78,7 @@ public class CartObject implements Serializable {
         if (this.items != null) {
             //2, check existed item
             for (tbl_Product1DTO dto : this.items.keySet()) {
-                if (dto.getSku().equalsIgnoreCase(id)) {
+                if (dto.getSku().equalsIgnoreCase(sku)) {
                     items.remove(dto);
                     result = true;
                     break;
