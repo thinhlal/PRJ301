@@ -7,30 +7,22 @@ package thinhlvd.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import thinhlvd.registration.RegistrationDAO;
-import thinhlvd.registration.RegistrationDTO;
+import thinhlvd.cart.CartObject;
+import thinhlvd.tbl_Product1.Tbl_Product1DTO;
 
 /**
  *
- * @author ACER
+ * @author Admin'
  */
-@WebServlet(name = "StartupController", urlPatterns = {"/StartupController"})
-public class StartupController extends HttpServlet {
-
-    private final String LOGIN_PAGE = "login.html";
-    private final String SEARCH_PAGE = "search.jsp";//welcome different user we use jsp
+@WebServlet(name = "RemoveItemsFromCartServlet", urlPatterns = {"/RemoveItemsFromCartServlet"})
+public class RemoveItemsFromCartServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,43 +36,35 @@ public class StartupController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = LOGIN_PAGE;
+
         try {
-            /*1. check cookies existed
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                //2. get name and value (username and password)
-                Cookie newestCokie = cookies[cookies.length - 1];
-                String username = newestCokie.getName();
-                String password = newestCokie.getValue();
-                //3. checkLogin (call Model)
-                RegistrationDAO dao = new RegistrationDAO();
-                RegistrationDTO dto = dao.checkLogin(username, password);
-                //4. process result
-                if (dto != null) {
-                    url = SEARCH_PAGE;
-                }//authentication is ok
-            }//no first time*/
-            HttpSession session = request.getSession(false);
+            //1. Customer Go to Cart place
+            HttpSession session = request.getSession(false);//tai vi session co the time out cho du` client chua thoat man hinh khi ngta dong may
             if (session != null) {
-                RegistrationDTO user = (RegistrationDTO) session.getAttribute("USER");
-                if (user != null) {
-                    String username = user.getUsername();
-                    String password = user.getPassword();
-                    //checkLogin (call Model)
-                    RegistrationDAO dao = new RegistrationDAO();
-                    RegistrationDTO dto = dao.checkLogin(username, password);
-                    if (dto != null) {
-                        url = SEARCH_PAGE;
-                    }
-                }
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (NamingException ex) {
-            ex.printStackTrace();
+                //2. Customer take his/her cart
+                CartObject cart = (CartObject)session.getAttribute("CART");
+                if(cart != null){//neu co gio hang thi xoa
+                    //3. Customer get items(khach hang lay noi chua do`)
+                    Map<Tbl_Product1DTO, Integer> items = cart.getItems();
+                    if(items != null){//neu ngan chua do` co ton tai thi xoa
+                        //4. Customer removes item from items
+                        String[] removedItems = request.getParameterValues("chkItem");
+                        if(removedItems != null){// co the k xoa item nao
+                            for (String removedItem : removedItems) {
+                                cart.removeItemFromCart(removedItem);
+                            }
+                            //gio hang(attribute thay doi)>set
+                            session.setAttribute("CART", cart);
+                        }//At least 1 item has removed
+                    }//items has existed(ngan chua do` ton tai)
+                }//Cart has existed(gio hang ton tai)
+            }//cart place has existed(noi chua gio hang ton` tai)
         } finally {
-            response.sendRedirect(url);
+            //refresh --> call previous function again using urlRewriting technique
+            //dung urlRewriting vi trung btAction o trang product.jsp
+            String urlRewriting = "DispatchServlet"
+                    + "?btAction=View Your Cart";//k them parameter vi` view your cart k co nhap lieu
+            response.sendRedirect(urlRewriting);
         }
     }
 

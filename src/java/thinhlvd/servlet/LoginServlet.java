@@ -15,7 +15,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import thinhlvd.registration.RegistrationDAO;
+import thinhlvd.registration.RegistrationDTO;
 
 /**
  *
@@ -25,7 +27,8 @@ public class LoginServlet extends HttpServlet {
 
     private final String INVALID_PAGE = "invalid.html";
     private final String SEARCH_PAGE = "search.jsp";
-
+    private final String LOGIN_PAGE = "login.jsp";
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -43,27 +46,41 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("txtUsername");
         String password = request.getParameter("txtPassword");
         String url = INVALID_PAGE;
-
+        boolean error = false;
+        
         try {
             //2. Call Model
             //2.1 New DAO Object
             RegistrationDAO dao = new RegistrationDAO();
             //2.2 Call method of DAO
-            boolean result = dao.checkLogin(username, password);
+            RegistrationDTO dto = dao.checkLogin(username, password);
             //3. process result
-            if (result) {
+            if (dto != null) {
+                error = false;
                 url = SEARCH_PAGE;
                 //write cookies
-                Cookie cookie = new Cookie(username, password);
-                cookie.setMaxAge(60*3);
-                response.addCookie(cookie);
+//                Cookie cookie = new Cookie(username, password);
+//                cookie.setMaxAge(60*3);
+//                response.setHeader("Set-Cookie", "key=value; HttpOnly; SameSite=strict");
+//                response.addCookie(cookie);
+                HttpSession session = request.getSession();
+                session.setAttribute("USER", dto);
+            }else {
+                error = true;
+                url = LOGIN_PAGE;
+                request.setAttribute("ERRORMSG", "Incorrect UserID or Password");
             }
         } catch (NamingException ex) {
             ex.printStackTrace();
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            response.sendRedirect(url);
+            if(error){
+                RequestDispatcher rd = request.getRequestDispatcher(url);
+                rd.forward(request, response);
+            }else {
+                response.sendRedirect(url);
+            }
         }
     }
 

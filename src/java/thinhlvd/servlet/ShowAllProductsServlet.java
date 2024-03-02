@@ -18,8 +18,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import thinhlvd.tbl_Product1.tbl_Product1DAO;
-import thinhlvd.tbl_Product1.tbl_Product1DTO;
+import thinhlvd.tbl_Product1.Tbl_Product1DAO;
+import thinhlvd.tbl_Product1.Tbl_Product1DTO;
 
 /**
  *
@@ -46,10 +46,10 @@ public class ShowAllProductsServlet extends HttpServlet {
         String url = ERROR_PAGE;
         try {
             //1.CALL DAO tblProduct1 (new DAO)
-            tbl_Product1DAO dao = new tbl_Product1DAO();
+            Tbl_Product1DAO dao = new Tbl_Product1DAO();
             //2.Call method of DAO
             dao.getAllProducts();
-            List<tbl_Product1DTO> products = dao.getProducts();
+            List<Tbl_Product1DTO> products = dao.getProducts();
             url = PRODUCTS_PAGE;
             request.setAttribute("PRODUCTS", products);
         } catch (SQLException ex) {

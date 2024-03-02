@@ -1,16 +1,27 @@
+<%-- 
+    Document   : login
+    Created on : Mar 2, 2024, 5:38:30 PM
+    Author     : Admin'
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
-        <title>Login</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
     </head>
     <body>
+        <% 
+            String errorMsg = (String)request.getAttribute("ERRORMSG");
+            if(errorMsg != null){
+                %>
+                <h3 style="color: red">
+                    <%= errorMsg %>
+                </h3>
+        <%
+            }
+        %>
         <h1>Login Page</h1>
         <form action="DispatchServlet" method="POST">
             Username <input type="text" name="txtUsername" value="" /> <br/>

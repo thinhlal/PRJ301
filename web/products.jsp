@@ -5,7 +5,7 @@
 --%>
 
 <%@page import="java.util.List"%>
-<%@page import="thinhlvd.tbl_Product1.tbl_Product1DTO"%>
+<%@page import="thinhlvd.tbl_Product1.Tbl_Product1DTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -15,17 +15,19 @@
     </head>
     <body>
         <%
-            List<tbl_Product1DTO> products
-                    = (List<tbl_Product1DTO>) request.getAttribute("PRODUCTS");
+            List<Tbl_Product1DTO> products
+                    = (List<Tbl_Product1DTO>) request.getAttribute("PRODUCTS");
             if (products != null) {
         %>
         <form action="DispatchServlet">
             Choose    
             <select name="cboBook">
                 <%
-                    for (tbl_Product1DTO product : products) {
+                    for (Tbl_Product1DTO product : products) {
                 %>
-                    <option value="<%= product.getSku() %>"><%= product.getName()%></option>
+                    <option value="<%= product.getSku() %>">
+                        <%= "Name:" + product.getName() + "-Price:" + product.getUnit_price()+ "-Des:" + product.getDescription() %>
+                    </option>
                 <%
                     }
                 %>

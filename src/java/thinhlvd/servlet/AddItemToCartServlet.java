@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import thinhlvd.cart.CartObject;
-import thinhlvd.tbl_Product1.tbl_Product1DAO;
-import thinhlvd.tbl_Product1.tbl_Product1DTO;
+import thinhlvd.tbl_Product1.Tbl_Product1DAO;
+import thinhlvd.tbl_Product1.Tbl_Product1DTO;
 
 /**
  *
@@ -31,6 +31,7 @@ import thinhlvd.tbl_Product1.tbl_Product1DTO;
 public class AddItemToCartServlet extends HttpServlet {
 
     private final String ERROR_PAGE = "errors.html";
+    private final String OUT_OF_STOCK_PAGE = "productQuantityNotEnough.html";
     private final String SHOW_PRODUCT_SERVLET = "ShowAllProductsServlet";
 
     /**
@@ -57,11 +58,10 @@ public class AddItemToCartServlet extends HttpServlet {
                 cart = new CartObject();// gio chua co thi keu len
             }//end cart has NOT existed
             //3.Customer drops item to his/her cart
-            //sku id item
-            String item = request.getParameter("cboBook");
+            String item = request.getParameter("cboBook");//sku primary key
             boolean result = false;
-            List<tbl_Product1DTO> products = (List<tbl_Product1DTO>) request.getAttribute("PRODUCTS");//nhan tat ca ttin product
-            for (tbl_Product1DTO product : products) {
+            List<Tbl_Product1DTO> products = (List<Tbl_Product1DTO>) request.getAttribute("PRODUCTS");//nhan tat ca ttin product
+            for (Tbl_Product1DTO product : products) {
                 if (product.getSku().equalsIgnoreCase(item)) {
                     result = cart.addItemToCart(product);//thay doi cart -> setAttribute
                     break;
@@ -71,7 +71,9 @@ public class AddItemToCartServlet extends HttpServlet {
                 session.setAttribute("CART", cart);
                 //4.Customer continuely take item to drop
                 url = SHOW_PRODUCT_SERVLET;
-            }//adding item is success
+            }else {//adding item is success
+                url = OUT_OF_STOCK_PAGE;
+            }//adding item is fail(out of stock)
         } finally {
             //dung ca 2 cai nao cung duoc vi duoc luu trong session roi
             response.sendRedirect(url);

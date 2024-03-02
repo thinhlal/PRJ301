@@ -30,6 +30,9 @@ public class DispatchServlet extends HttpServlet {
     private final String SHOW_ALL_PRODUCTS_CONTROLLER = "ShowAllProductsServlet";
     //private final String ADD_ITEM_TO_CART_CONTROLLER = "AddItemToCartServlet";
     private final String GET_INFO_PRODUCT_BEFORE_ADD_ITEM_CONTROLLER = "GetAllInfoProductsBeforeAddItem";
+    private final String REMOVE_ITEMS_FROM_CART_CONTROLLER = "RemoveItemsFromCartServlet";
+    private final String CHECK_OUT_CART_CONTROLLER = "CheckOutFromCartServlet";
+    private final String LOG_OUT_CONTROLLER = "LogOutController";
 
     private final String VIEW_YOUR_CART_PAGE = "viewCart.jsp";
 
@@ -60,6 +63,12 @@ public class DispatchServlet extends HttpServlet {
                 url = GET_INFO_PRODUCT_BEFORE_ADD_ITEM_CONTROLLER;
             } else if (button.equals("View Your Cart")) {//user clicked view your cart
                 url = VIEW_YOUR_CART_PAGE;
+            } else if (button.equals("Remove Selected Items")) {//user clicked remove your cart
+                url = REMOVE_ITEMS_FROM_CART_CONTROLLER;
+            } else if (button.equals("CheckOut")) {//user clicked checkout your cart
+                url = CHECK_OUT_CART_CONTROLLER;
+            } else if (button.equals("LogOut")) {//user clicked checkout your cart
+                url = LOG_OUT_CONTROLLER;
             }
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);

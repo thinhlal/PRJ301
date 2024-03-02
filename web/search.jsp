@@ -16,26 +16,34 @@
     </head>
     <body>
         <%
-            Cookie[] cookies = request.getCookies();
-            if(cookies != null){
-                int count = 0;
-                for (Cookie cookie : cookies) {
-                    System.out.println("--------------");
-                    System.out.println(++count);
-                    System.out.println(cookie.getName());
-                    System.out.println(cookie.getMaxAge());
-                    System.out.println(cookie.getValue());
-                    System.out.println("--------------");
-                }
-                Cookie lastCookie = cookies[cookies.length - 1];
-                String username = lastCookie.getName();
+//            Cookie[] cookies = request.getCookies();
+//            if(cookies != null){
+//                int count = 0;
+//                for (Cookie cookie : cookies) {
+//                    System.out.println("--------------");
+//                    System.out.println(++count);
+//                    System.out.println(cookie.getName());
+//                    System.out.println(cookie.getMaxAge());
+//                    System.out.println(cookie.getValue());
+//                    System.out.println("--------------");
+//                }
+//                Cookie lastCookie = cookies[cookies.length - 1];
+//                String username = lastCookie.getName();
+                    RegistrationDTO user = (RegistrationDTO)session.getAttribute("USER");
+                    if(user != null){
+                        %> 
+                        <font color="red">
+                            Welcome, <%= user.getFullName() %> 
+                        </font>
+                <%
+                    }
                 %>
-                <font color="red">
-                    Welcome, <%= username %> 
-                </font>
-        <%
+        <%--
             }//login is ok
-        %>
+        --%>
+        <form action="DispatchServlet">
+            <input type="submit" value="LogOut" name="btAction" />
+        </form>
         <h1>Search</h1>
         <form action="DispatchServlet">
             Search Value <input type="text" name="txtSearchValue" 

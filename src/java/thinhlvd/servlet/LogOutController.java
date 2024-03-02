@@ -7,31 +7,22 @@ package thinhlvd.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import thinhlvd.registration.RegistrationDAO;
-import thinhlvd.registration.RegistrationDTO;
 
 /**
  *
- * @author ACER
+ * @author Admin'
  */
-@WebServlet(name = "StartupController", urlPatterns = {"/StartupController"})
-public class StartupController extends HttpServlet {
-
-    private final String LOGIN_PAGE = "login.html";
-    private final String SEARCH_PAGE = "search.jsp";//welcome different user we use jsp
-
+@WebServlet(name = "LogOutController", urlPatterns = {"/LogOutController"})
+public class LogOutController extends HttpServlet {
+    
+    private final String LOG_IN_PAGE = "login.jsp";
+    private final String ERROR_PAGE = "errors.html";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,41 +35,14 @@ public class StartupController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = LOGIN_PAGE;
+        String url = ERROR_PAGE;
+        
         try {
-            /*1. check cookies existed
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                //2. get name and value (username and password)
-                Cookie newestCokie = cookies[cookies.length - 1];
-                String username = newestCokie.getName();
-                String password = newestCokie.getValue();
-                //3. checkLogin (call Model)
-                RegistrationDAO dao = new RegistrationDAO();
-                RegistrationDTO dto = dao.checkLogin(username, password);
-                //4. process result
-                if (dto != null) {
-                    url = SEARCH_PAGE;
-                }//authentication is ok
-            }//no first time*/
             HttpSession session = request.getSession(false);
-            if (session != null) {
-                RegistrationDTO user = (RegistrationDTO) session.getAttribute("USER");
-                if (user != null) {
-                    String username = user.getUsername();
-                    String password = user.getPassword();
-                    //checkLogin (call Model)
-                    RegistrationDAO dao = new RegistrationDAO();
-                    RegistrationDTO dto = dao.checkLogin(username, password);
-                    if (dto != null) {
-                        url = SEARCH_PAGE;
-                    }
-                }
+            if(session != null){
+                session.invalidate();
+                url = LOG_IN_PAGE;
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (NamingException ex) {
-            ex.printStackTrace();
         } finally {
             response.sendRedirect(url);
         }

@@ -18,8 +18,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import thinhlvd.tbl_Product1.tbl_Product1DAO;
-import thinhlvd.tbl_Product1.tbl_Product1DTO;
+import thinhlvd.tbl_Product1.Tbl_Product1DAO;
+import thinhlvd.tbl_Product1.Tbl_Product1DTO;
 
 /**
  *
@@ -45,9 +45,9 @@ public class GetAllInfoProductsBeforeAddItem extends HttpServlet {
         
         try {
             //1. Call DAO
-            tbl_Product1DAO dao = new tbl_Product1DAO();
+            Tbl_Product1DAO dao = new Tbl_Product1DAO();
             dao.getAllProducts();
-            List<tbl_Product1DTO> products = dao.getProducts();
+            List<Tbl_Product1DTO> products = dao.getProducts();
             request.setAttribute("PRODUCTS", products);
             url = ADD_ITEM_CONTROLLER;
         } catch (SQLException ex) {

@@ -4,7 +4,7 @@
     Author     : ACER
 --%>
 
-<%@page import="thinhlvd.tbl_Product1.tbl_Product1DTO"%>
+<%@page import="thinhlvd.tbl_Product1.Tbl_Product1DTO"%>
 <%@page import="java.util.Map"%>
 <%@page import="thinhlvd.cart.CartObject"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -23,40 +23,58 @@
                 CartObject cart = (CartObject) session.getAttribute("CART");
                 if (cart != null) {
                     //3.Cust gets items
-                    Map<tbl_Product1DTO, Integer> items = cart.getItems();
+                    Map<Tbl_Product1DTO, Integer> items = cart.getItems();
                     if (items != null) {
                         //4. Cust shows all items
                         %>
-                        <table border="1">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Name</th>
-                                    <th>Quantity</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <%
-                                    int count = 0;
-                                    for (tbl_Product1DTO key : items.keySet()) {
-                                        %>
-                                <tr>
-                                    <td>
-                                        <%= ++count %>
-                                    .</td>
-                                    <td>
-                                        <%= key.getName() %>
-                                    </td>
-                                    <td>
-                                        <%= items.get(key) %>
-                                    </td>
-                                </tr>   
-                                <%
-                                    }//traverse items
-                                %>
-                            </tbody>
-                        </table>
-
+                        <form action="DispatchServlet">
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        int count = 0;
+                                        for (Tbl_Product1DTO key : items.keySet()) {
+                                            %>
+                                    <tr>
+                                        <td>
+                                            <%= ++count %>
+                                        .</td>
+                                        <td>
+                                            <%= key.getName() %>
+                                        </td>
+                                        <td>
+                                            <%= items.get(key) %>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" name="chkItem" value="<%= key.getSku() %>" />
+                                        </td>
+                                    </tr>   
+                                    <%
+                                        }//traverse items
+                                    %>
+                                    <tr>
+                                        <td colspan="3">
+                                            <a href="DispatchServlet?btAction=Go to Shopping">Add more Item to Your Cart</a>
+                                        </td>
+                                        <td>
+                                            <input type="submit" 
+                                                   value="Remove Selected Items" 
+                                                   name="btAction" />
+                                        </td>
+                                    </tr> 
+                                </tbody>
+                            </table>
+                            Name<input type="text" name="txtNameViewCart" value="" /><br/>
+                            Address<input type="text" name="txtAddressViewCart" value="" /><br/>
+                            <input type="submit" value="CheckOut" name="btAction" />
+                        </form>
         <%
                         return;
                     }//items have existed

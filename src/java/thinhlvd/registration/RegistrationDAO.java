@@ -12,19 +12,19 @@ import thinhlvd.util.DBHelper;
 
 public class RegistrationDAO implements Serializable {
 
-    public boolean checkLogin(String username, String password)
+    public RegistrationDTO checkLogin(String username, String password)
             throws SQLException, /*ClassNotFoundException*/ NamingException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
-        boolean result = false;
+        RegistrationDTO dto = null;
 
         try {
             //1. get Connection
             con = DBHelper.getConnection();
             if (con != null) {
                 //2. create SQL String
-                String sql = "SELECT username "
+                String sql = "SELECT username, password, lastname, isAdmin "
                         + "FROM Registration "
                         + "WHERE username = ? "
                         + "AND password = ?";
@@ -36,7 +36,11 @@ public class RegistrationDAO implements Serializable {
                 rs = stm.executeQuery();
                 //5. Process Result
                 if (rs.next()) {
-                    result = true;
+                    String name = rs.getString("username");
+                    String pass = rs.getString("password");
+                    String lastname = rs.getString("lastname");
+                    boolean isAdmin = rs.getBoolean("isAdmin");
+                    dto = new RegistrationDTO(name, pass, lastname, isAdmin);
                 }//end username and password are verified
             }// end connection has been available
         } finally {
@@ -50,7 +54,7 @@ public class RegistrationDAO implements Serializable {
                 con.close();
             }
         }
-        return result;
+        return dto;
     }
 
     private List<RegistrationDTO> accounts;
