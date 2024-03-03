@@ -85,5 +85,10 @@
         <h2 color="red">
             No cart is existed
         </h2>
+        <%
+            String urlRewriting = "DispatchServlet"
+                    + "?btAction=Go to Shopping";
+        %>
+        <a href="<%= urlRewriting %>">Go back to shopping</a>
     </body>
 </html>

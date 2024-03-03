@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,7 +34,10 @@ import thinhlvd.tbl_Product1.Tbl_Product1DTO;
  */
 @WebServlet(name = "CheckOutFromCartServlet", urlPatterns = {"/CheckOutFromCartServlet"})
 public class CheckOutFromCartServlet extends HttpServlet {
+
     private String ERROR_PAGE = "errors.html";
+    private String SHOW_BILL_CONTROLLER = "GetBillServlet";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -65,13 +69,18 @@ public class CheckOutFromCartServlet extends HttpServlet {
                     Map<Tbl_Product1DTO, Integer> items = cart.getItems();
                     if (items != null) {
                         T_OrderDAO dao_T_Order = new T_OrderDAO();
-                        int count = dao_T_Order.countOrder() + 1;
-                        if (count < 10) {
-                            id = prefixId + "00" + count;
-                        } else if (count >= 10 && count <= 99) {
-                            id = prefixId + "0" + count;
+                        Integer maxID = dao_T_Order.getMaxOrderId();
+                        if (maxID == null) {
+                            maxID = 1;
                         } else {
-                            id = prefixId + count;
+                            ++maxID;
+                        }
+                        if (maxID < 10) {
+                            id = prefixId + "00" + maxID;
+                        } else if (maxID >= 10 && maxID <= 99) {
+                            id = prefixId + "0" + maxID;
+                        } else {
+                            id = prefixId + maxID;
                         }
                         boolean result = dao_T_Order.createCheckOutOrder(id, dateFormat.format(date), name, address, 0.0);
                         if (result) {//Order checkout insert success to database
@@ -81,19 +90,21 @@ public class CheckOutFromCartServlet extends HttpServlet {
                                 String productID = item.getSku();
                                 double unitPrice = item.getUnit_price();
                                 int quantity = items.get(item);
-                                double total = unitPrice * quantity ;
+                                double total = unitPrice * quantity;
                                 String orderID = id;
-                                
-                                boolean checkInsertOrderDetail = 
-                                        daoOrderDetail.createOrderDetail(productID, unitPrice, quantity, decfor.format(total), orderID);
+
+                                boolean checkInsertOrderDetail
+                                        = daoOrderDetail.createOrderDetail(productID, unitPrice, quantity, decfor.format(total), orderID);
                             }//add success all item with order id to db orderdetail
                             //update total price of orderid from orderdetail to t_order 
                             double totalOfAllItems = daoOrderDetail.sumAllTotalPriceOfOrderID(id);
                             boolean updateTotalPriceTo_T_Order = dao_T_Order.updateTotalPrice(id, decfor.format(totalOfAllItems));
-                            if(updateTotalPriceTo_T_Order){//da update total vao t_Order
+                            if (updateTotalPriceTo_T_Order) {//da update total vao t_Order
                                 session.removeAttribute("CART");//xoa gio hang
-                                url = "DispatchServlet"
-                                        + "?btAction=Go to Shopping";
+                                /*url = "DispatchServlet"
+                                        + "?btAction=Go to Shopping";*/
+                                request.setAttribute("IDOFORDER", id);
+                                url = SHOW_BILL_CONTROLLER;
                             }
                         }
                     }//items has existed
@@ -104,7 +115,9 @@ public class CheckOutFromCartServlet extends HttpServlet {
         } catch (NamingException ex) {
             ex.printStackTrace();
         } finally {
-            response.sendRedirect(url);
+            //response.sendRedirect(url);
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         }
     }
 

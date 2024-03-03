@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.naming.NamingException;
 import thinhlvd.util.DBHelper;
 
@@ -18,7 +20,12 @@ import thinhlvd.util.DBHelper;
  * @author Admin'
  */
 public class OrderDetailDAO implements Serializable {
+    List<OrderDetailDTO> listOrder = null;
 
+    public List<OrderDetailDTO> getListOrder() {
+        return listOrder;
+    }
+    
     public boolean createOrderDetail(String productID, double unitPrice, int quantity, String totalString, String orderID) throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
@@ -97,5 +104,51 @@ public class OrderDetailDAO implements Serializable {
         }
 
         return total;
+    }
+    
+    public void getAllItemsOrder(String orderID) 
+            throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            //1. Make connection
+            con = DBHelper.getConnection();
+            if (con != null) {
+                //2. Create sql
+                String sql = "SELECT id, productID, unitPrice, quantity, total "
+                        + "FROM OrderDetail "
+                        + "WHERE orderID = ?";
+                //3. Create Statement Object
+                stm = con.prepareStatement(sql);
+                stm.setString(1, orderID);
+                //4. Execute Query
+                rs = stm.executeQuery();
+                //5. Process Result
+                while(rs.next()) {
+                    String id = rs.getString("id");
+                    String productID = rs.getString("productID");
+                    double unitPrice = rs.getDouble("unitPrice");
+                    int quantity = rs.getInt("quantity");
+                    double total = rs.getDouble("total");
+                    OrderDetailDTO dto = new OrderDetailDTO(productID, unitPrice, quantity, total, orderID);
+                    if(listOrder == null){
+                        listOrder = new ArrayList<>();
+                    }
+                    listOrder.add(dto);
+                }
+            }
+        } finally {
+            if(rs != null){
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
     }
 }

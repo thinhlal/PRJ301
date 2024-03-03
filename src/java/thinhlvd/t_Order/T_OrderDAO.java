@@ -60,7 +60,7 @@ public class T_OrderDAO implements Serializable {
         return result;
     }
 
-    public int countOrder()
+    /*public int countOrder()
             throws NamingException, SQLException {
         Connection con = null;
         Statement stm = null;
@@ -80,24 +80,61 @@ public class T_OrderDAO implements Serializable {
                 //4. Execute query
                 rs = stm.executeQuery(sql);
                 //5. Process query
-                while(rs.next()){
+                while (rs.next()) {
                     countRows = rs.getInt("count");
                 }
             }
         } finally {
-            if(rs != null){
+            if (rs != null) {
                 rs.close();
             }
-            if(stm != null){
+            if (stm != null) {
                 stm.close();
             }
-            if(con != null){
+            if (con != null) {
                 con.close();
             }
         }
         return countRows;
+    }*/
+    public Integer getMaxOrderId() throws SQLException, NamingException {
+        Connection con = null;
+        Statement stm = null;
+        ResultSet rs = null;
+        Integer result = null;
+
+        try {
+            //1 Make connection
+            con = DBHelper.getConnection();
+            //2 Create String sql
+            String sql = "SELECT MAX(id) AS max "
+                    + "FROM t_Order";
+            //3 Create statement object
+            stm = con.createStatement();
+            //4 Execute query
+            rs = stm.executeQuery(sql);
+            //5 Process result
+            if (rs.next()) {
+                String id = rs.getString("max");
+                if (id != null) {
+                    String idDigits = id.substring(2);
+                    result = Integer.parseInt(idDigits);
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
     }
-    
+
     public boolean updateTotalPrice(String orderID, String totalString)
             throws NamingException, SQLException {
         Connection con = null;
@@ -118,11 +155,53 @@ public class T_OrderDAO implements Serializable {
                 //4. Execute query
                 int effectedRows = stm.executeUpdate();
                 //5. Process query
-                if(effectedRows > 0){
+                if (effectedRows > 0) {
                     result = true;
                 }
             }
         } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    }
+
+    public T_OrderDTO getBillOfOrder(String id) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        T_OrderDTO dto = null;
+
+        try {
+            //1 Make Connection
+            con = DBHelper.getConnection();
+            if(con != null){
+                //2 Create String sql
+                String sql = "SELECT date, customer, address, total "
+                        + "FROM t_Order "
+                        + "WHERE id = ?";
+                //3 Create statement object
+                stm = con.prepareStatement(sql);
+                stm.setString(1, id);
+                //4 Execute Query
+                rs = stm.executeQuery();
+                //5 Process Result
+                if(rs.next()){
+                    Date date = rs.getDate("date");
+                    String customer = rs.getString("customer");
+                    String address = rs.getString("address");
+                    double total = rs.getDouble("total");
+                    dto = new T_OrderDTO(id, date, customer, address, total);
+                }
+            }
+        } finally {
+            if(rs != null){
+                rs.close();
+            }
             if(stm != null){
                 stm.close();
             }
@@ -130,6 +209,6 @@ public class T_OrderDAO implements Serializable {
                 con.close();
             }
         }
-        return result;
+        return dto;
     }
 }

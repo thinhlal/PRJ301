@@ -33,7 +33,8 @@
                 %>
             </select><br/>    
             <input type="submit" value="Add Book To Your Cart" name="btAction" />
-            <input type="submit" value="View Your Cart" name="btAction" />
+            <input type="submit" value="View Your Cart" name="btAction" /><br/>
+            <a href="login.jsp">Back to login</a>
         </form>
         <%
             }
