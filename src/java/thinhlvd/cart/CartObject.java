@@ -24,7 +24,6 @@ public class CartObject implements Serializable {
     //k dung set vi set la up nguyen gio do vao gio cua minh
 
     public boolean addItemToCart(Tbl_Product1DTO product) {//bo? do` vao ngan chua do
-        Tbl_Product1DTO item = product;
         boolean result = false;
         boolean checkExistedItem = false;
         //1. check valid id
@@ -46,7 +45,7 @@ public class CartObject implements Serializable {
         for (Tbl_Product1DTO dto : this.items.keySet()) {
             // ktra product duoc add da ton tai chua thong qua sku 
             //neu ton tai roi thi add va cho result = true(add->tang quantity success)
-            if (dto.getSku().equalsIgnoreCase(item.getSku())) {
+            if (dto.getSku().equalsIgnoreCase(product.getSku())) {
                 checkExistedItem = true;
                 if (dto.getQuantity() > 0 && dto.isStatus()) {//neu quantity >0 va trang thai true thi add san pham vao ngan chua do
                     dto.setQuantity(dto.getQuantity() - 1);//giam quantity di 1 khi add item
@@ -63,9 +62,9 @@ public class CartObject implements Serializable {
         //4. drops item to items(bo do vao ngan chua do`)
         //this.items.put(id, quantity);
         if (!result && !checkExistedItem) {//ktra result = false vi` neu khong co ton tai product phai add product do vao voi quantity mac dinh = 1
-            if (item.getQuantity() > 0 && item.isStatus()) {//neu quantity >0 va trang thai true thi add san pham vao ngan chua do
-                item.setQuantity(item.getQuantity() - 1);//giam quantity di 1 khi add item
-                this.items.put(item, quantity);
+            if (product.getQuantity() > 0 && product.isStatus()) {//neu quantity >0 va trang thai true thi add san pham vao ngan chua do
+                product.setQuantity(product.getQuantity() - 1);//giam quantity di 1 khi add item
+                this.items.put(product, quantity);
                 result = true;
             }
         }

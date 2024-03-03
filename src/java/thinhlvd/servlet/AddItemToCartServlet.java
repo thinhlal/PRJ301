@@ -27,6 +27,7 @@ import thinhlvd.tbl_Product1.Tbl_Product1DTO;
  *
  * @author ACER
  */
+@SuppressWarnings("unchecked")
 @WebServlet(name = "AddItemToCartServlet", urlPatterns = {"/AddItemToCartServlet"})
 public class AddItemToCartServlet extends HttpServlet {
 
@@ -53,7 +54,7 @@ public class AddItemToCartServlet extends HttpServlet {
             HttpSession session = request.getSession();//Gio hang o sieu thi luon luon phai co k duoc het gio hang
             //2.Customer takes his/her cart
             //call Model/DAO
-            CartObject cart = (CartObject) session.getAttribute("CART"); // lay gio
+            CartObject cart = (CartObject)session.getAttribute("CART"); // lay gio
             if (cart == null) {
                 cart = new CartObject();// gio chua co thi keu len
             }//end cart has NOT existed
