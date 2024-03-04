@@ -61,7 +61,7 @@ public class CheckOutFromCartServlet extends HttpServlet {
         try {
             // Customer go to cart place
             HttpSession session = request.getSession(false);//gio hang co the bi timeout do o giao dien client chua refresh ma bi timeout o server
-            if (session != null) {
+            if (session != null) {//luon luon co do trong gio moi checkout dc
                 //2. Customer take his her cart
                 CartObject cart = (CartObject) session.getAttribute("CART");
                 if (cart != null) {
