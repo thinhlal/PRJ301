@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
     private final String INVALID_PAGE = "invalid.html";
     private final String SEARCH_PAGE = "search.jsp";
     private final String LOGIN_PAGE = "login.jsp";
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -47,7 +47,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("txtPassword");
         String url = INVALID_PAGE;
         boolean error = false;
-        
+
         try {
             //2. Call Model
             //2.1 New DAO Object
@@ -59,28 +59,28 @@ public class LoginServlet extends HttpServlet {
                 error = false;
                 url = SEARCH_PAGE;
                 //write cookies
-//                Cookie cookie = new Cookie(username, password);
-//                cookie.setMaxAge(60*3);
-//                response.setHeader("Set-Cookie", "key=value; HttpOnly; SameSite=strict");
-//                response.addCookie(cookie);
-                HttpSession session = request.getSession();
-                session.setAttribute("USER", dto);
-            }else {
+                Cookie cookie = new Cookie(username, password);
+                cookie.setMaxAge(60 * 3);
+                response.addCookie(cookie);
+//                HttpSession session = request.getSession();
+//                session.setAttribute("USER", dto);
+            } /*else {
                 error = true;
                 url = LOGIN_PAGE;
                 request.setAttribute("ERRORMSG", "Incorrect UserID or Password");
-            }
+            }*/
         } catch (NamingException ex) {
             ex.printStackTrace();
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            if(error){
-                RequestDispatcher rd = request.getRequestDispatcher(url);
-                rd.forward(request, response);
-            }else {
-                response.sendRedirect(url);
-            }
+//            if(error){
+//                RequestDispatcher rd = request.getRequestDispatcher(url);
+//                rd.forward(request, response);
+//            }else {
+//                response.sendRedirect(url);
+//            }
+            response.sendRedirect(url);
         }
     }
 

@@ -5,7 +5,6 @@
 --%>
 
 <%@page import="thinhlvd.registration.RegistrationDTO"%>
-<%--<%@page session="false" %>--%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -16,24 +15,24 @@
     </head>
     <body>
         <%
-//            Cookie[] cookies = request.getCookies();
-//            if(cookies != null){
-//                int count = 0;
-//                for (Cookie cookie : cookies) {
-//                    System.out.println("--------------");
-//                    System.out.println(++count);
-//                    System.out.println(cookie.getName());
-//                    System.out.println(cookie.getMaxAge());
-//                    System.out.println(cookie.getValue());
-//                    System.out.println("--------------");
-//                }
-//                Cookie lastCookie = cookies[cookies.length - 1];
-//                String username = lastCookie.getName();
-                    RegistrationDTO user = (RegistrationDTO)session.getAttribute("USER");
-                    if(user != null){
+            Cookie[] cookies = request.getCookies();
+            if(cookies != null){
+                int count = 0;
+                for (Cookie cookie : cookies) {
+                    System.out.println();
+                    System.out.println(++count);
+                    System.out.println(cookie.getName());
+                    System.out.println(cookie.getValue());
+                    System.out.println("--------------");
+                }
+                Cookie lastCookie = cookies[cookies.length - 1];
+                String username = lastCookie.getName();
+//                   // RegistrationDTO user = (RegistrationDTO)session.getAttribute("USER");
+//                    if(user != null){
                         %> 
                         <font color="red">
-                            Welcome, <%= user.getFullName() %> 
+                            <%--Welcome, <%= user.getFullName() %>--%>
+                            Welcome, <%= username %>
                         </font>
                 <%
                     }
