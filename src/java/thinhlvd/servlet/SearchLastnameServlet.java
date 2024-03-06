@@ -29,7 +29,7 @@ import thinhlvd.registration.RegistrationDTO;
 @WebServlet(name = "SearchLastnameServlet", urlPatterns = {"/SearchLastnameServlet"})
 public class SearchLastnameServlet extends HttpServlet {
 
-    private final String SEARCH_PAGE = "search.html";
+    //private final String SEARCH_PAGE = "search.html";
     private final String RESULT_PAGE = "search.jsp";
 
     /**
@@ -47,7 +47,7 @@ public class SearchLastnameServlet extends HttpServlet {
 
         //1. get all client information
         String searchValue = request.getParameter("txtSearchValue");
-        String url = SEARCH_PAGE;
+        String url = RESULT_PAGE;
 
         try {
             if (!searchValue.trim().isEmpty()) {
@@ -58,7 +58,7 @@ public class SearchLastnameServlet extends HttpServlet {
                 dao.searchLastname(searchValue);
                 List<RegistrationDTO> result = dao.getAccounts();
                 //3. process result
-                url = RESULT_PAGE;
+                //url = RESULT_PAGE;
                 request.setAttribute("SEARCH_RESULT", result);
             }//end user types valid
         } catch (SQLException ex) {
