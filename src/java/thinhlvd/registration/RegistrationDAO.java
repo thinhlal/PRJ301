@@ -17,14 +17,14 @@ public class RegistrationDAO implements Serializable {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
-        RegistrationDTO dto = null;
+        RegistrationDTO result = null;
 
         try {
             //1. get Connection
             con = DBHelper.getConnection();
             if (con != null) {
                 //2. create SQL String
-                String sql = "SELECT username, password, lastname, isAdmin "
+                String sql = "SELECT lastname, isAdmin "
                         + "FROM Registration "
                         + "WHERE username = ? "
                         + "AND password = ?";
@@ -36,11 +36,9 @@ public class RegistrationDAO implements Serializable {
                 rs = stm.executeQuery();
                 //5. Process Result
                 if (rs.next()) {
-                    String name = rs.getString("username");
-                    String pass = rs.getString("password");
                     String lastname = rs.getString("lastname");
                     boolean isAdmin = rs.getBoolean("isAdmin");
-                    dto = new RegistrationDTO(name, pass, lastname, isAdmin);
+                    result = new RegistrationDTO(username, null, lastname, isAdmin);
                 }//end username and password are verified
             }// end connection has been available
         } finally {
@@ -54,7 +52,50 @@ public class RegistrationDAO implements Serializable {
                 con.close();
             }
         }
-        return dto;
+        return result;
+    }
+    
+    public RegistrationDTO getInfoFromUserAndPass(String username, String password)
+            throws SQLException, /*ClassNotFoundException*/ NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        RegistrationDTO result = null;
+
+        try {
+            //1. get Connection
+            con = DBHelper.getConnection();
+            if (con != null) {
+                //2. create SQL String
+                String sql = "SELECT lastname, isAdmin "
+                        + "FROM Registration "
+                        + "WHERE username = ? "
+                        + "AND password = ?";
+                //3. create Statement Object
+                stm = con.prepareStatement(sql);
+                stm.setString(1, username);
+                stm.setString(2, password);
+                //4. Execute Query
+                rs = stm.executeQuery();
+                //5. Process Result
+                if (rs.next()) {
+                    String lastname = rs.getString("lastname");
+                    boolean isAdmin = rs.getBoolean("isAdmin");
+                    result = new RegistrationDTO(username, password, lastname, isAdmin);
+                }//end username and password are verified
+            }// end connection has been available
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
     }
 
     private List<RegistrationDTO> accounts;

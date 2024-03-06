@@ -50,7 +50,6 @@ public class GetBillServlet extends HttpServlet {
         
         try {
             String id = (String)request.getAttribute("IDOFORDER");//get id of T_order
-            System.out.println("ID" + id);
             //1 Call DAO
             T_OrderDAO daoTO = new T_OrderDAO();
             T_OrderDTO getBillInfo = daoTO.getBillOfOrder(id);

@@ -12,23 +12,16 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <% 
-            String errorMsg = (String)request.getAttribute("ERRORMSG");
-            if(errorMsg != null){
-                %>
-                <h3 style="color: red">
-                    <%= errorMsg %>
-                </h3>
-        <%
-            }
-        %>
+        <h3 style="color: red">
+            ${requestScope.ERRORMSG}
+        </h3>
         <h1>Login Page</h1>
         <form action="DispatchServlet" method="POST">
             Username <input type="text" name="txtUsername" value="" /> <br/>
             Password <input type="password" name="txtPassword" value="" /> <br/>
             <input type="submit" value="Login" name="btAction" />
             <input type="reset" value="Reset" />
-            
+
         </form>
         <form action="DispatchServlet">
             <input type="submit" value="Go to Shopping" name="btAction" />

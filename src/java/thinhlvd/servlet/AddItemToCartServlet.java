@@ -61,7 +61,9 @@ public class AddItemToCartServlet extends HttpServlet {
             //3.Customer drops item to his/her cart
             String item = request.getParameter("cboBook");//sku primary key
             boolean result = false;
-            List<Tbl_Product1DTO> products = (List<Tbl_Product1DTO>) request.getAttribute("PRODUCTS");//nhan tat ca ttin product
+            Tbl_Product1DAO dao = new Tbl_Product1DAO();
+            dao.getAllProducts();
+            List<Tbl_Product1DTO> products = dao.getProducts();
             for (Tbl_Product1DTO product : products) {
                 if (product.getSku().equalsIgnoreCase(item)) {
                     result = cart.addItemToCart(product);//thay doi cart -> setAttribute
@@ -75,6 +77,10 @@ public class AddItemToCartServlet extends HttpServlet {
             }else {//adding item is success
                 url = OUT_OF_STOCK_PAGE;
             }//adding item is fail(out of stock)
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
         } finally {
             //dung ca 2 cai nao cung duoc vi duoc luu trong session roi
             response.sendRedirect(url);

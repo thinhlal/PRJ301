@@ -28,8 +28,7 @@ public class DispatchServlet extends HttpServlet {
     private final String STARTUP_CONTROLLER = "StartupController";
     private final String UPDATE_ACCOUNT_CONTROLLER = "UpdateAccountServlet";
     private final String SHOW_ALL_PRODUCTS_CONTROLLER = "ShowAllProductsServlet";
-    //private final String ADD_ITEM_TO_CART_CONTROLLER = "AddItemToCartServlet";
-    private final String GET_INFO_PRODUCT_BEFORE_ADD_ITEM_CONTROLLER = "GetAllInfoProductsBeforeAddItem";
+    private final String ADD_ITEM_TO_CART_CONTROLLER = "AddItemToCartServlet";
     private final String REMOVE_ITEMS_FROM_CART_CONTROLLER = "RemoveItemsFromCartServlet";
     private final String CHECK_OUT_CART_CONTROLLER = "CheckOutFromCartServlet";
     private final String LOG_OUT_CONTROLLER = "LogOutController";
@@ -60,7 +59,7 @@ public class DispatchServlet extends HttpServlet {
             } else if (button.equals("Go to Shopping")) {//user clicked go to shopping
                 url = SHOW_ALL_PRODUCTS_CONTROLLER;
             } else if (button.equals("Add Book To Your Cart")) {//user clicked add item to cart
-                url = GET_INFO_PRODUCT_BEFORE_ADD_ITEM_CONTROLLER;
+                url = ADD_ITEM_TO_CART_CONTROLLER;
             } else if (button.equals("View Your Cart")) {//user clicked view your cart
                 url = VIEW_YOUR_CART_PAGE;
             } else if (button.equals("Remove Selected Items")) {//user clicked remove your cart

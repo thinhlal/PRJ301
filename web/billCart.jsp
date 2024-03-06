@@ -9,6 +9,7 @@
 <%@page import="java.util.List"%>
 <%@page import="thinhlvd.t_Order.T_OrderDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,11 +18,66 @@
     </head>
     <body>
         <h1>Your Bill</h1>
+
+        <c:set var="orderID" value="${requestScope.BILL}"/>
+        <c:set var="orderDetails" value="${requestScope.LISTITEM}"/>
+        <c:set var="listProductInfor" value="${requestScope.LISTPRODUCT}"/>
+        <c:if test="${(not empty orderID) and (not empty orderDetails) and (not empty listProductInfor)}">
+            <h2>Name: ${orderID.customer}</h2>
+            <h2>Address: ${orderID.address}</h2>
+            <h2>Date: ${orderID.datetime}</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>NO.</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="orderDetail" items="${orderDetails}" varStatus="counter">
+                        <c:if test="${orderDetail.orderID eq orderID.id}">
+                            <c:forEach var="product" items="${listProductInfor}">
+                                <c:if test="${product.sku eq orderDetail.productID}">
+                                    <tr>
+                                        <td>${counter.count}</td>
+                                        <td>${product.name}</td>
+                                        <td>${product.description}</td>
+                                        <td>${product.unit_price}</td>
+                                        <td>${orderDetail.quantity}</td>
+                                        <td>${orderDetail.total}</td>
+                                    </tr>
+                                </c:if>
+                            </c:forEach>
+                        </c:if>
+                    </c:forEach>
+                    <tr>
+                        <td colspan="6" style="text-align: right; color: dodgerblue">
+                            Grand Total: ${orderID.total}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </c:if>
+
+        <br/>
+        <br/>
+        <c:url var="goShopping" value="DispatchServlet">
+            <c:param name="btAction" value="Go to Shopping"/>
+        </c:url>
+        <a href="${goShopping}">Go back to shopping</a><br/>
+        <a href="login.jsp">Go to login</a>
+
+        <%--
+        <h1>Your Bill</h1>
         <%
             T_OrderDTO orderID = (T_OrderDTO)request.getAttribute("BILL");
             List<OrderDetailDTO> orderDetails = (List<OrderDetailDTO>)request.getAttribute("LISTITEM");
             List<Tbl_Product1DTO> listProductInfor = (List<Tbl_Product1DTO>)request.getAttribute("LISTPRODUCT");
-            System.out.println(orderDetails);
             if(orderID != null && orderDetails != null && listProductInfor != null){
                 int count = 0;
                 %>
@@ -80,5 +136,6 @@
         <br/>
         <a href="<%= urlRewriting %>">Go back to shopping</a><br/>
         <a href="login.jsp">Go to login</a>
+        --%>
     </body>
 </html>

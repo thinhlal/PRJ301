@@ -53,34 +53,35 @@ public class LoginServlet extends HttpServlet {
             //2.1 New DAO Object
             RegistrationDAO dao = new RegistrationDAO();
             //2.2 Call method of DAO
-            RegistrationDTO dto = dao.checkLogin(username, password);
+            RegistrationDTO result = dao.checkLogin(username, password);
             //3. process result
-            if (dto != null) {
+            if (result != null) {
+                //write cookies
+//                Cookie cookie = new Cookie(username, password);
+//                cookie.setMaxAge(60 * 3);
+//                response.addCookie(cookie);
                 error = false;
                 url = SEARCH_PAGE;
-                //write cookies
-                Cookie cookie = new Cookie(username, password);
-                cookie.setMaxAge(60 * 3);
-                response.addCookie(cookie);
-//                HttpSession session = request.getSession();
-//                session.setAttribute("USER", dto);
-            } /*else {
+                HttpSession session = request.getSession();
+                RegistrationDTO account = dao.getInfoFromUserAndPass(username, password);
+                session.setAttribute("USER", account);
+            } else {
                 error = true;
                 url = LOGIN_PAGE;
                 request.setAttribute("ERRORMSG", "Incorrect UserID or Password");
-            }*/
+            }
         } catch (NamingException ex) {
             ex.printStackTrace();
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-//            if(error){
-//                RequestDispatcher rd = request.getRequestDispatcher(url);
-//                rd.forward(request, response);
-//            }else {
-//                response.sendRedirect(url);
-//            }
-            response.sendRedirect(url);
+            if (error) {
+                RequestDispatcher rd = request.getRequestDispatcher(url);
+                rd.forward(request, response);
+            } else {
+                response.sendRedirect(url);
+            }
+//            response.sendRedirect(url);
         }
     }
 

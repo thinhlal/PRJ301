@@ -101,8 +101,6 @@ public class CheckOutFromCartServlet extends HttpServlet {
                             boolean updateTotalPriceTo_T_Order = dao_T_Order.updateTotalPrice(id, decfor.format(totalOfAllItems));
                             if (updateTotalPriceTo_T_Order) {//da update total vao t_Order
                                 session.removeAttribute("CART");//xoa gio hang
-                                /*url = "DispatchServlet"
-                                        + "?btAction=Go to Shopping";*/
                                 request.setAttribute("IDOFORDER", id);
                                 url = SHOW_BILL_CONTROLLER;
                             }
@@ -115,7 +113,6 @@ public class CheckOutFromCartServlet extends HttpServlet {
         } catch (NamingException ex) {
             ex.printStackTrace();
         } finally {
-            //response.sendRedirect(url);
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         }

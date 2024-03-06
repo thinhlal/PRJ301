@@ -7,6 +7,7 @@
 <%@page import="java.util.List"%>
 <%@page import="thinhlvd.tbl_Product1.Tbl_Product1DTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,6 +15,21 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <c:set var="allProducts" value="${requestScope.PRODUCTS}"/>
+        <form action="DispatchServlet">
+            Choose:
+            <select name="cboBook">
+                <c:forEach var="product" items="${allProducts}">
+                    <option value="${product.sku}">
+                        ${product.name}-${product.unit_price}-${product.description}
+                    </option>
+                </c:forEach>
+            </select><br/>
+            <input type="submit" value="Add Book To Your Cart" name="btAction" />
+            <input type="submit" value="View Your Cart" name="btAction" /><br/>
+            <a href="login.jsp">Back to login</a>
+        </form>
+        <%--
         <%
             List<Tbl_Product1DTO> products
                     = (List<Tbl_Product1DTO>) request.getAttribute("PRODUCTS");
@@ -39,5 +55,6 @@
         <%
             }
         %>
+        --%>
     </body>
 </html>

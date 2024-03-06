@@ -17,6 +17,7 @@ public class OrderDetailDTO implements Serializable{
     private int quantity;
     private double total;
     private String orderID;
+    
     public OrderDetailDTO() {
     }
 

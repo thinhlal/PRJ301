@@ -46,41 +46,42 @@ public class StartupController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String url = LOGIN_PAGE;
         try {
-            //1. check cookies existed
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                //2. get name and value (username and password)
-                //Cookie newestCokie = cookies[cookies.length - 1];
-                //String username = newestCokie.getName();
-                //String password = newestCokie.getValue();
-
-                //3. checkLogin (call Model)
-                RegistrationDAO dao = new RegistrationDAO();
-                RegistrationDTO dto = null;
-                for (Cookie cookie : cookies) {
-                    String username = cookie.getName();
-                    String password = cookie.getValue();
-                    dto = dao.checkLogin(username, password);
-                }
-                //4. process result
-                if (dto != null) {
-                    url = SEARCH_PAGE;
-                }//authentication is ok
-            }//no first time*/
-//            HttpSession session = request.getSession(false);
-//            if (session != null) {
-//                RegistrationDTO user = (RegistrationDTO) session.getAttribute("USER");
-//                if (user != null) {
-//                    String username = user.getUsername();
-//                    String password = user.getPassword();
-//                    //checkLogin (call Model)
-//                    RegistrationDAO dao = new RegistrationDAO();
-//                    RegistrationDTO dto = dao.checkLogin(username, password);
-//                    if (dto != null) {
-//                        url = SEARCH_PAGE;
-//                    }
+//            //1. check cookies existed
+//            Cookie[] cookies = request.getCookies();
+//            if (cookies != null) {
+//                //2. get name and value (username and password)
+//                //Cookie newestCokie = cookies[cookies.length - 1];
+//                //String username = newestCokie.getName();
+//                //String password = newestCokie.getValue();
+//
+//                //3. checkLogin (call Model)
+//                RegistrationDAO dao = new RegistrationDAO();
+//                RegistrationDTO dto = null;
+//                for (Cookie cookie : cookies) {
+//                    String username = cookie.getName();
+//                    String password = cookie.getValue();
+//                    dto = dao.checkLogin(username, password);
 //                }
-//            }
+//                //4. process result
+//                if (dto != null) {
+//                    url = SEARCH_PAGE;
+//                }//authentication is ok
+            //}//no first time*/
+            
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                RegistrationDTO user = (RegistrationDTO) session.getAttribute("USER");
+                if (user != null) {
+                    String username = user.getUsername();
+                    String password = user.getPassword();
+                    //checkLogin (call Model)
+                    RegistrationDAO dao = new RegistrationDAO();
+                    RegistrationDTO dto = dao.checkLogin(username, password);
+                    if (dto != null) {
+                        url = SEARCH_PAGE;
+                    }//authentication is ok
+                }
+            }// session cua nguoi dung ton tai
         } catch (SQLException ex) {
             ex.printStackTrace();
         } catch (NamingException ex) {
