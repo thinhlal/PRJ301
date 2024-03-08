@@ -54,7 +54,7 @@ public class RegistrationDAO implements Serializable {
         }
         return result;
     }
-    
+
     public RegistrationDTO getInfoFromUserAndPass(String username, String password)
             throws SQLException, /*ClassNotFoundException*/ NamingException {
         Connection con = null;
@@ -228,6 +228,46 @@ public class RegistrationDAO implements Serializable {
                 if (stm != null) {
                     effectRows = stm.executeUpdate();
                 }
+                //5. Process Result
+                if (effectRows > 0) {
+                    result = true;
+                }
+            }// end connection has been available
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    }
+
+    public boolean createAccount(RegistrationDTO account)
+            throws SQLException, /*ClassNotFoundException*/ NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        boolean result = false;
+
+        try {
+            //1. get Connection
+            con = DBHelper.getConnection();
+            if (con != null) {
+                //2. create SQL String
+                String sql = "INSERT INTO Registration("
+                        + "username, password, lastname, isAdmin"
+                        + ") VALUES("
+                        + "?, ?, ?, ?"
+                        + ") ";
+                //3. create Statement Object
+                stm = con.prepareStatement(sql);
+                stm.setString(1, account.getUsername());
+                stm.setString(2, account.getPassword());
+                stm.setString(3, account.getFullName());
+                stm.setBoolean(4, account.isRole());
+                //4. Execute Query
+                int effectRows = stm.executeUpdate();
                 //5. Process Result
                 if (effectRows > 0) {
                     result = true;

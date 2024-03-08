@@ -32,6 +32,7 @@ public class DispatchServlet extends HttpServlet {
     private final String REMOVE_ITEMS_FROM_CART_CONTROLLER = "RemoveItemsFromCartServlet";
     private final String CHECK_OUT_CART_CONTROLLER = "CheckOutFromCartServlet";
     private final String LOG_OUT_CONTROLLER = "LogOutController";
+    private final String CREATE_NEW_ACCOUNT_CONTROLLER = "CreateAccountServlet";
 
     private final String VIEW_YOUR_CART_PAGE = "viewCart.jsp";
 
@@ -68,6 +69,8 @@ public class DispatchServlet extends HttpServlet {
                 url = CHECK_OUT_CART_CONTROLLER;
             } else if (button.equals("LogOut")) {//user clicked checkout your cart
                 url = LOG_OUT_CONTROLLER;
+            } else if (button.equals("Create New Account")) {//user clicked checkout your cart
+                url = CREATE_NEW_ACCOUNT_CONTROLLER;
             }
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);

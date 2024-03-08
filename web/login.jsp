@@ -12,13 +12,13 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h3 style="color: red">
-            ${requestScope.ERRORMSG}
-        </h3>
         <h1>Login Page</h1>
         <form action="DispatchServlet" method="POST">
             Username <input type="text" name="txtUsername" value="" /> <br/>
             Password <input type="password" name="txtPassword" value="" /> <br/>
+            <font style="color: red">
+                ${requestScope.ERRORMSG}
+                </font><br/>
             <input type="submit" value="Login" name="btAction" />
             <input type="reset" value="Reset" />
 
