@@ -62,9 +62,11 @@ public class SearchLastnameServlet extends HttpServlet {
                 request.setAttribute("SEARCH_RESULT", result);
             }//end user types valid
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("SearchLastnameServlet _ SQLException: " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("SearchLastnameServlet _ NamingException: " + ex.getMessage());
         } finally {
             //4.send to View(+ request scope)
             //use rd because hold request object setAtt

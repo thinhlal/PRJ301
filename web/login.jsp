@@ -26,5 +26,6 @@
         <form action="DispatchServlet">
             <input type="submit" value="Go to Shopping" name="btAction" />
         </form>
+        <a href="createAccount.html">Sign Up</a>
     </body>
 </html>

@@ -27,8 +27,9 @@
             </select><br/>
             <input type="submit" value="Add Book To Your Cart" name="btAction" />
             <input type="submit" value="View Your Cart" name="btAction" /><br/>
-            <a href="login.jsp">Back to login</a>
         </form>
+        <a href="login.jsp">Back to login</a><br/>
+        <a href="createAccount.html">Sign Up</a>
         <%--
         <%
             List<Tbl_Product1DTO> products

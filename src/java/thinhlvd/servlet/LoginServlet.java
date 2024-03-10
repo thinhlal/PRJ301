@@ -71,9 +71,11 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("ERRORMSG", "Incorrect UserID or Password");
             }
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("LoginServlet _ NamingException: " + ex.getMessage());
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("LoginServlet _ SQLException: " + ex.getMessage());
         } finally {
             if (error) {
                 RequestDispatcher rd = request.getRequestDispatcher(url);

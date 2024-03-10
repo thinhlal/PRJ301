@@ -49,7 +49,7 @@ public class CartObject implements Serializable {
                 checkExistedItem = true;
                 if (dto.getQuantity() > 0 && dto.isStatus()) {//neu quantity >0 va trang thai true thi add san pham vao ngan chua do
                     dto.setQuantity(dto.getQuantity() - 1);//giam quantity di 1 khi add item
-                    quantity = this.items.get(dto) + 1;
+                    quantity = this.items.get(dto) + 1;//tang them so luong khi add trung san pham
                     this.items.put(dto, quantity);//set value moi cho product do phai dung dto k dung product 
                     //vi bien references toi khac nhau mac du chung gia tri
                     result = true;
@@ -61,7 +61,7 @@ public class CartObject implements Serializable {
         }//ket thuc vong lap key cua Map
         //4. drops item to items(bo do vao ngan chua do`)
         //this.items.put(id, quantity);
-        if (!result && !checkExistedItem) {//ktra result = false vi` neu khong co ton tai product phai add product do vao voi quantity mac dinh = 1
+        if (!result && !checkExistedItem) {//ktra checkExistedItem = false vi` neu khong co ton tai product phai add product do vao voi quantity mac dinh = 1
             if (product.getQuantity() > 0 && product.isStatus()) {//neu quantity >0 va trang thai true thi add san pham vao ngan chua do
                 product.setQuantity(product.getQuantity() - 1);//giam quantity di 1 khi add item
                 this.items.put(product, quantity);

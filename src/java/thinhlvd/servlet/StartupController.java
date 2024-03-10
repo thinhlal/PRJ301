@@ -67,7 +67,7 @@ public class StartupController extends HttpServlet {
 //                    url = SEARCH_PAGE;
 //                }//authentication is ok
             //}//no first time*/
-            
+
             HttpSession session = request.getSession(false);
             if (session != null) {
                 RegistrationDTO user = (RegistrationDTO) session.getAttribute("USER");
@@ -83,9 +83,11 @@ public class StartupController extends HttpServlet {
                 }
             }// session cua nguoi dung ton tai
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("StartupController _ SQLException: " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("StartupController _ NamingException: " + ex.getMessage());
         } finally {
             response.sendRedirect(url);
         }

@@ -65,22 +65,25 @@ public class AddItemToCartServlet extends HttpServlet {
             dao.getAllProducts();
             List<Tbl_Product1DTO> products = dao.getProducts();
             for (Tbl_Product1DTO product : products) {
-                if (product.getSku().equalsIgnoreCase(item)) {
-                    result = cart.addItemToCart(product);//thay doi cart -> setAttribute
+                if (product.getSku().equalsIgnoreCase(item)) {//kiem tra product nao co ma sku trung voi item duoc add
+                    result = cart.addItemToCart(product);//add object product voi day du thong tin san pham vao
                     break;
                 }//tim thay day du ttin product co sku
             }
             if (result) {
+                //thay doi cart -> setAttribute
                 session.setAttribute("CART", cart);
                 //4.Customer continuely take item to drop
                 url = SHOW_PRODUCT_SERVLET;
             }else {//adding item is success
                 url = OUT_OF_STOCK_PAGE;
-            }//adding item is fail(out of stock)
+            }//adding item is fail(out of stock or unavailable)
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("AddItemToCartServlet _ SQLException: " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("AddItemToCartServlet _ NamingException: " + ex.getMessage());
         } finally {
             //dung ca 2 cai nao cung duoc vi duoc luu trong session roi
             response.sendRedirect(url);

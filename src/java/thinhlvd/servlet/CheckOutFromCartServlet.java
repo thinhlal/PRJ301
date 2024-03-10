@@ -69,11 +69,12 @@ public class CheckOutFromCartServlet extends HttpServlet {
                     Map<Tbl_Product1DTO, Integer> items = cart.getItems();
                     if (items != null) {
                         T_OrderDAO dao_T_Order = new T_OrderDAO();
+                        //lay ra id lon nhat ton tai trong db
                         Integer maxID = dao_T_Order.getMaxOrderId();
-                        if (maxID == null) {
+                        if (maxID == null) {//chua co t_order nao trong db(chua co id nao)
                             maxID = 1;
                         } else {
-                            ++maxID;
+                            ++maxID;//tang them 1 neu lay ra max
                         }
                         if (maxID < 10) {
                             id = prefixId + "00" + maxID;
@@ -82,18 +83,22 @@ public class CheckOutFromCartServlet extends HttpServlet {
                         } else {
                             id = prefixId + maxID;
                         }
+                        //insert orderID cua 1 nguoi dung xuong DB voi total = 0
                         boolean result = dao_T_Order.createCheckOutOrder(id, dateFormat.format(date), name, address, 0.0);
+                        //neu orderID insert xuong db success thi se tao ra OrderDetail
                         if (result) {//Order checkout insert success to database
                             OrderDetailDAO daoOrderDetail = new OrderDetailDAO();
                             DecimalFormat decfor = new DecimalFormat("0.000");//format sau dau thap phan .xxx
+                            //add tat ca item trong ngan chua do(items) vao db dua tren OrderID da duoc tao khi nguoi dung checkout
                             for (Tbl_Product1DTO item : items.keySet()) {//add each item to orderdetail db with orderid
                                 String productID = item.getSku();
                                 double unitPrice = item.getUnit_price();
+                                //so luong san pham cua 1 item da add
                                 int quantity = items.get(item);
                                 double total = unitPrice * quantity;
                                 String orderID = id;
 
-                                boolean checkInsertOrderDetail
+                                boolean createOrderDetail
                                         = daoOrderDetail.createOrderDetail(productID, unitPrice, quantity, decfor.format(total), orderID);
                             }//add success all item with order id to db orderdetail
                             //update total price of orderid from orderdetail to t_order 
@@ -109,9 +114,11 @@ public class CheckOutFromCartServlet extends HttpServlet {
                 }//cart has existed
             }//cart place has existed
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("CheckOutFromCartServlet _ SQLException: " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("CheckOutFromCartServlet _ NamingException: " + ex.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

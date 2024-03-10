@@ -68,8 +68,10 @@ public class GetBillServlet extends HttpServlet {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
+            log("GetBillServlet _ SQLException: " + ex.getMessage());
         } catch (NamingException ex) {
             ex.printStackTrace();
+            log("GetBillServlet _ NamingException: " + ex.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

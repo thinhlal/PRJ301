@@ -53,9 +53,11 @@ public class ShowAllProductsServlet extends HttpServlet {
             url = PRODUCTS_PAGE;
             request.setAttribute("PRODUCTS", products);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("ShowAllProductsServlet _ SQLException: " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("ShowAllProductsServlet _ NamingException: " + ex.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

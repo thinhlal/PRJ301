@@ -57,9 +57,11 @@ public class DeleteAccountServlet extends HttpServlet {
                         + "&txtSearchValue=" + searchValue;
             }//end delete is success
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("DeleteAccountServlet _ SQLException: " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            log("DeleteAccountServlet _ NamingException: " + ex.getMessage());
         } finally {
             //forward k sai duoc boi vi trung parameter 
             //btAction tao ra mang va k biet thu tu va lay gtri dau tien va k biet delete hay search truoc

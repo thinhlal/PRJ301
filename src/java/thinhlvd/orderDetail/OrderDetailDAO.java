@@ -37,8 +37,11 @@ public class OrderDetailDAO implements Serializable {
             con = DBHelper.getConnection();
             if (con != null) {
                 //2. Create sql
-                String sql = "INSERT INTO OrderDetail (productID, unitPrice, quantity, total, orderID) "
-                        + "VALUES (?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO OrderDetail ("
+                        + "productID, unitPrice, quantity, total, orderID"
+                        + ") VALUES("
+                        + "?, ?, ?, ?, ?"
+                        + ")";
                 //3. Create Statement Object
                 stm = con.prepareStatement(sql);
                 stm.setString(1, productID);
@@ -117,7 +120,7 @@ public class OrderDetailDAO implements Serializable {
             con = DBHelper.getConnection();
             if (con != null) {
                 //2. Create sql
-                String sql = "SELECT id, productID, unitPrice, quantity, total "
+                String sql = "SELECT productID, unitPrice, quantity, total "
                         + "FROM OrderDetail "
                         + "WHERE orderID = ?";
                 //3. Create Statement Object
@@ -127,7 +130,6 @@ public class OrderDetailDAO implements Serializable {
                 rs = stm.executeQuery();
                 //5. Process Result
                 while(rs.next()) {
-                    String id = rs.getString("id");
                     String productID = rs.getString("productID");
                     double unitPrice = rs.getDouble("unitPrice");
                     int quantity = rs.getInt("quantity");

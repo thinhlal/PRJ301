@@ -16,11 +16,10 @@
         <title>JSP Page</title>
     </head>
     <body>
-
         <h1>Book Store</h1>
-        <c:set var="cart" value="${sessionScope.CART}" />
+        <c:set var="cart" value="${sessionScope.CART}" /><%--lay gio do(cart)--%>
         <c:if test="${not empty cart}">
-            <c:set var="items" value="${cart.items}" />
+            <c:set var="items" value="${cart.items}" /><%--lay noi chua do(items)--%>
             <c:if test="${not empty items}">
                 <form action="DispatchServlet">
                     <table border="1">
@@ -33,11 +32,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="key" items="${items.keySet()}" varStatus="counter">
+                            <c:forEach var="key" items="${items.keySet()}" varStatus="counter"><%--lay mang keySet chua info cua do`--%>
                                 <tr>
                                     <td>${counter.count}</td>
                                     <td>${key.name}</td>
-                                    <td>${items.get(key)}</td>
+                                    <td>${items.get(key)}</td><%--so luong da add cua tung mon do--%>
                                     <td>
                                         <input type="checkbox" name="chkItem" value="${key.sku}" />
                                     </td>
