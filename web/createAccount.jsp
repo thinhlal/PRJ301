@@ -19,34 +19,35 @@
             Username* <input type="text" name="txtUsername" value="${param.txtUsername}" /> (6 - 20 chars)<br/>
             <c:if test="${not empty errors.usernameLengthError}">
                 <font color="red">
-                    ${errors.usernameLengthError}
+                ${errors.usernameLengthError}
                 </font><br/>
             </c:if>
             <c:if test="${not empty errors.usernameIsExisted}">
                 <font color="red">
-                    ${errors.usernameIsExisted}
+                ${errors.usernameIsExisted}
                 </font><br/>
             </c:if>
             Password* <input type="password" name="txtPassword" value="" /> (6 - 30 chars)<br/>
             <c:if test="${not empty errors.passwordLengthError}">
                 <font color="red">
-                    ${errors.passwordLengthError}
+                ${errors.passwordLengthError}
                 </font><br/>
             </c:if>
             Confirm* <input type="password" name="txtConfirm" value="" /><br/>
             <c:if test="${not empty errors.confirmNotMatched}">
                 <font color="red">
-                    ${errors.confirmNotMatched}
+                ${errors.confirmNotMatched}
                 </font><br/>
             </c:if>
             Full name* <input type="text" name="txtFullName" value="${param.txtFullName}" /> (2 - 50 chars)<br/>
             <c:if test="${not empty errors.fullNameLengthError}">
                 <font color="red">
-                    ${errors.fullNameLengthError}
+                ${errors.fullNameLengthError}
                 </font><br/>
             </c:if>
             <input type="submit" value="Create New Account" name="btAction" />
             <input type="reset" value="Reset" />
         </form>
+        <a href="login.html">Back to Log In</a>
     </body>
 </html>
