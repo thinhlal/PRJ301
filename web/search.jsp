@@ -15,15 +15,15 @@
         <title>Search</title>
     </head>
     <body>
-        <font color="red">
+       <font color="red">
         Welcome, ${sessionScope.USER.fullName}
         </font>
-        <%--
+        <%-- 
         <%
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 //test cookies
-//                int count = 0;
+                //                int count = 0;
 //                for (Cookie cookie : cookies) {
 //                    System.out.println();
 //                    System.out.println(++count);
@@ -31,8 +31,14 @@
 //                    System.out.println(cookie.getValue());
 //                    System.out.println("--------------");
 //                }
+                Cookie firstCookie = cookies[0];
                 Cookie lastCookie = cookies[cookies.length - 1];
-                String username = lastCookie.getName();
+                String username;
+                if(firstCookie.getName().equalsIgnoreCase("JSESSIONID")){
+                    username = lastCookie.getName();
+                }else{
+                    username = firstCookie.getName();
+                }
         %> 
                 <font color="red">
                 Welcome, <%= username%>

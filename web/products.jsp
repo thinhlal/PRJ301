@@ -24,7 +24,9 @@
                         ${product.name}-${product.unit_price}-${product.description}
                     </option>
                 </c:forEach>
-            </select><br/>
+            </select>
+            <font color="red">${requestScope.ADD_ERROR}</font>
+            <br/>
             <input type="submit" value="Add Book To Your Cart" name="btAction" />
             <input type="submit" value="View Your Cart" name="btAction" /><br/>
         </form>

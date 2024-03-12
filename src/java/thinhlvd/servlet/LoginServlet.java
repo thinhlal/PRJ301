@@ -57,6 +57,7 @@ public class LoginServlet extends HttpServlet {
             //3. process result
             if (result != null) {
                 //write cookies
+                url = SEARCH_PAGE;
 //                Cookie cookie = new Cookie(username, password);
 //                cookie.setMaxAge(60 * 3);
 //                response.addCookie(cookie);

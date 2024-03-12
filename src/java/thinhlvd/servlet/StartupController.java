@@ -61,6 +61,10 @@ public class StartupController extends HttpServlet {
 //                    String username = cookie.getName();
 //                    String password = cookie.getValue();
 //                    dto = dao.checkLogin(username, password);
+//                    if (dto != null) {
+//                        url = SEARCH_PAGE;
+//                        break;
+//                    }
 //                }
 //                //4. process result
 //                if (dto != null) {

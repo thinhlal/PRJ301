@@ -33,7 +33,6 @@ public class AddItemToCartServlet extends HttpServlet {
 
     private final String ERROR_PAGE = "errors.html";
     private final String OUT_OF_STOCK_PAGE = "productQuantityNotEnough.html";
-    private final String SHOW_PRODUCT_SERVLET = "ShowAllProductsServlet";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,19 +47,18 @@ public class AddItemToCartServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR_PAGE;
-
+        boolean result = false;
         try {
             //1.Customer goes to the cart place
             HttpSession session = request.getSession();//Gio hang o sieu thi luon luon phai co k duoc het gio hang
             //2.Customer takes his/her cart
             //call Model/DAO
-            CartObject cart = (CartObject)session.getAttribute("CART"); // lay gio
+            CartObject cart = (CartObject) session.getAttribute("CART"); // lay gio
             if (cart == null) {
                 cart = new CartObject();// gio chua co thi keu len
             }//end cart has NOT existed
             //3.Customer drops item to his/her cart
             String item = request.getParameter("cboBook");//sku primary key
-            boolean result = false;
             Tbl_Product1DAO dao = new Tbl_Product1DAO();
             dao.getAllProducts();
             List<Tbl_Product1DTO> products = dao.getProducts();
@@ -74,9 +72,13 @@ public class AddItemToCartServlet extends HttpServlet {
                 //thay doi cart -> setAttribute
                 session.setAttribute("CART", cart);
                 //4.Customer continuely take item to drop
-                url = SHOW_PRODUCT_SERVLET;
-            }else {//adding item is success
-                url = OUT_OF_STOCK_PAGE;
+                url = "DispatchServlet"
+                        + "?btAction=Go to Shopping";
+            } else {//adding item is success
+                //url = OUT_OF_STOCK_PAGE;
+                url = "DispatchServlet"
+                        + "?btAction=Go to Shopping"; 
+                request.setAttribute("ADD_ERROR", "Item is out of stock or not available now!!!!");
             }//adding item is fail(out of stock or unavailable)
         } catch (SQLException ex) {
             //ex.printStackTrace();
@@ -86,7 +88,12 @@ public class AddItemToCartServlet extends HttpServlet {
             log("AddItemToCartServlet _ NamingException: " + ex.getMessage());
         } finally {
             //dung ca 2 cai nao cung duoc vi duoc luu trong session roi
-            response.sendRedirect(url);
+            if (result) {
+                response.sendRedirect(url);
+            } else {
+                RequestDispatcher rd = request.getRequestDispatcher(url);
+                rd.forward(request, response);
+            }
         }
     }
 

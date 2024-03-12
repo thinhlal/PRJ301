@@ -15,14 +15,14 @@
         <h1>Login Page</h1>
         <form action="DispatchServlet" method="POST">
             Username <input type="text" name="txtUsername" value="" /> <br/>
-            Password <input type="password" name="txtPassword" value="" /> <br/>
+            Password <input type="password" name="txtPassword" value="" /> 
             <font style="color: red">
                 ${requestScope.ERRORMSG}
-                </font><br/>
+            </font><br/>
             <input type="submit" value="Login" name="btAction" />
             <input type="reset" value="Reset" />
-
         </form>
+        <br/>
         <form action="DispatchServlet">
             <input type="submit" value="Go to Shopping" name="btAction" />
         </form>
