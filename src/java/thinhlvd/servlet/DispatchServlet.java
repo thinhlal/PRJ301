@@ -7,12 +7,15 @@ package thinhlvd.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Properties;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -21,9 +24,12 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "DispatchServlet", urlPatterns = {"/DispatchServlet"})
 public class DispatchServlet extends HttpServlet {
 
-    private final String LOGIN_PAGE = "login.html";
-    private final String LOGIN_CONTROLLER = "LoginServlet";
-    private final String SEARCH_LASTNAME_CONTROLLER = "SearchLastnameServlet";
+    //private final String LOGIN_PAGE = "login.html";
+    //private final String LOGIN_PAGE = "";
+    //private final String LOGIN_CONTROLLER = "LoginServlet";
+    //private final String LOGIN_CONTROLLER = "loginController";
+    //private final String SEARCH_LASTNAME_CONTROLLER = "SearchLastnameServlet";
+    //private final String SEARCH_LASTNAME_CONTROLLER = "searchController";
     private final String DELETE_ACCOUNT_CONTROLLER = "DeleteAccountServlet";
     private final String STARTUP_CONTROLLER = "StartupController";
     private final String UPDATE_ACCOUNT_CONTROLLER = "UpdateAccountServlet";
@@ -39,10 +45,14 @@ public class DispatchServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties)context.getAttribute("SITEMAPS");
+        
         //1. Which button did user click;
         String button = request.getParameter("btAction");
-        String url = LOGIN_PAGE;
+        //String url = LOGIN_PAGE;
+        String url = siteMaps.getProperty(ApplicationConstants.DispatchFeature.LOGIN_PAGE);
 
         try {
             if (button == null) {//first time or apps starts up
@@ -50,9 +60,11 @@ public class DispatchServlet extends HttpServlet {
                 //check cookies to determine which page is tranfered
                 url = STARTUP_CONTROLLER;
             } else if (button.equals("Login")) {//user clicked Login
-                url = LOGIN_CONTROLLER;
+//                url = LOGIN_CONTROLLER;
+                  url = siteMaps.getProperty(ApplicationConstants.DispatchFeature.LOGIN_CONTROLLER);
             } else if (button.equals("Search")) {//user clicked Search
-                url = SEARCH_LASTNAME_CONTROLLER;
+//                url = SEARCH_LASTNAME_CONTROLLER;
+                  url = siteMaps.getProperty(ApplicationConstants.DispatchFeature.SEARCH_LASTNAME_CONTROLLER);
             } else if (button.equals("Delete")) {//user clicked Delete
                 url = DELETE_ACCOUNT_CONTROLLER;
             } else if (button.equals("Update")) {//user clicked Update

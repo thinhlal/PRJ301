@@ -8,8 +8,10 @@ package thinhlvd.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Properties;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import thinhlvd.registration.RegistrationDAO;
 import thinhlvd.registration.RegistrationDTO;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -25,9 +28,11 @@ import thinhlvd.registration.RegistrationDTO;
  */
 public class LoginServlet extends HttpServlet {
 
-    private final String INVALID_PAGE = "invalid.html";
-    private final String SEARCH_PAGE = "search.jsp";
-    private final String LOGIN_PAGE = "login.jsp";
+    //private final String INVALID_PAGE = "invalid.html";
+    //private final String INVALID_PAGE = "invalidPage";
+    //private final String SEARCH_PAGE = "search.jsp";
+    //private final String SEARCH_PAGE = "homePage";
+    //private final String LOGIN_PAGE = "login.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +47,14 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties)context.getAttribute("SITEMAPS");
+        
         //1. get all client information
         String username = request.getParameter("txtUsername");
         String password = request.getParameter("txtPassword");
-        String url = INVALID_PAGE;
+        String url = siteMaps.getProperty(ApplicationConstants.LoginFeature.INVALID_PAGE);
         boolean error = false;
 
         try {
@@ -57,18 +66,18 @@ public class LoginServlet extends HttpServlet {
             //3. process result
             if (result != null) {
                 //write cookies
-                url = SEARCH_PAGE;
+//                url = SEARCH_PAGE;
 //                Cookie cookie = new Cookie(username, password);
 //                cookie.setMaxAge(60 * 3);
 //                response.addCookie(cookie);
                 error = false;
-                url = SEARCH_PAGE;
+                url = siteMaps.getProperty(ApplicationConstants.LoginFeature.SEARCH_PAGE);
                 HttpSession session = request.getSession();
                 RegistrationDTO account = dao.getInfoFromUserAndPass(username, password);
                 session.setAttribute("USER", account);
             } else {
                 error = true;
-                url = LOGIN_PAGE;
+                url = siteMaps.getProperty(ApplicationConstants.LoginFeature.LOGIN_PAGE);;
                 request.setAttribute("ERRORMSG", "Incorrect UserID or Password");
             }
         } catch (NamingException ex) {
