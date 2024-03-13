@@ -8,10 +8,12 @@ package thinhlvd.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import thinhlvd.registration.RegistrationCreateError;
 import thinhlvd.registration.RegistrationDAO;
 import thinhlvd.registration.RegistrationDTO;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -28,8 +31,8 @@ import thinhlvd.registration.RegistrationDTO;
 @WebServlet(name = "CreateAccountServlet", urlPatterns = {"/CreateAccountServlet"})
 public class CreateAccountServlet extends HttpServlet {
 
-    private final String ERROR_PAGE = "createAccount.jsp";
-    private final String LOGIN_PAGE = "login.html";
+    //private final String ERROR_PAGE = "createAccount.jsp";
+    //private final String LOGIN_PAGE = "login.html";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,6 +46,10 @@ public class CreateAccountServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties)context.getAttribute("SITEMAPS");
+        
         //1.
         String username = request.getParameter("txtUsername");
         String password = request.getParameter("txtPassword");
@@ -50,24 +57,27 @@ public class CreateAccountServlet extends HttpServlet {
         String fullname = request.getParameter("txtFullName");
         boolean foundError = false;
         RegistrationCreateError errors = new RegistrationCreateError();
-        String url = ERROR_PAGE;
-
+        //String url = ERROR_PAGE;
+        String url = siteMaps.getProperty(ApplicationConstants.CreateAccountFeature.ERROR_PAGE);
         try {
             //2. check users errors
             if (username.trim().length() < 6 || username.trim().length() > 20) {
                 foundError = true;
-                errors.setUsernameLengthError("Username is required typing from 6 to 20 characters");
+                //errors.setUsernameLengthError("Username is required typing from 6 to 20 characters");
+                errors.setUsernameLengthError(6, 20);
             }
             if (password.trim().length() < 6 || password.trim().length() > 30) {
                 foundError = true;
-                errors.setPasswordLengthError("Password is required typing from 6 to 30 characters");
+                //errors.setPasswordLengthError("Password is required typing from 6 to 30 characters");
+                errors.setPasswordLengthError(6, 30);
             } else if (!confirm.trim().equals(password.trim())) {
                 foundError = true;
                 errors.setConfirmNotMatched("Confirm must match Password");
             }
             if (fullname.trim().length() < 2 || fullname.trim().length() > 50) {
                 foundError = true;
-                errors.setFullNameLengthError("Fullname is required typing from 2 to 50 characters");
+                //errors.setFullNameLengthError("Fullname is required typing from 2 to 50 characters");
+                errors.setFullNameLengthError(2, 50);
             }
             if (foundError) {
                 //caching to specific attribute
@@ -79,7 +89,8 @@ public class CreateAccountServlet extends HttpServlet {
                 boolean result = dao.createAccount(dto);
                 //4. process result
                 if(result){
-                    url = LOGIN_PAGE;
+                    //url = LOGIN_PAGE;
+                    url = siteMaps.getProperty(ApplicationConstants.CreateAccountFeature.LOGIN_PAGE);
                 }//create account is success
             }//no errors
 

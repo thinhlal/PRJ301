@@ -8,15 +8,18 @@ package thinhlvd.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import thinhlvd.registration.RegistrationDAO;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -24,7 +27,7 @@ import thinhlvd.registration.RegistrationDAO;
  */
 @WebServlet(name = "DeleteAccountServlet", urlPatterns = {"/DeleteAccountServlet"})
 public class DeleteAccountServlet extends HttpServlet {
-    private final String ERROR_PAGE = "errors.html";
+    //private final String ERROR_PAGE = "errors.html";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +41,14 @@ public class DeleteAccountServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties) context.getAttribute("SITEMAPS");
+        
         //1.Get all parameter
         String username = request.getParameter("pk");
         String searchValue = request.getParameter("lastSearchValue");
-        String url = ERROR_PAGE;
+        String url = siteMaps.getProperty(ApplicationConstants.ErrorFeature.ERROR_PAGE);
 
         try {
             //2.Call model

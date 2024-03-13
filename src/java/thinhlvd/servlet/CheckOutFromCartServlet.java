@@ -13,10 +13,12 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,6 +29,7 @@ import thinhlvd.cart.CartObject;
 import thinhlvd.orderDetail.OrderDetailDAO;
 import thinhlvd.t_Order.T_OrderDAO;
 import thinhlvd.tbl_Product1.Tbl_Product1DTO;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -35,9 +38,8 @@ import thinhlvd.tbl_Product1.Tbl_Product1DTO;
 @WebServlet(name = "CheckOutFromCartServlet", urlPatterns = {"/CheckOutFromCartServlet"})
 public class CheckOutFromCartServlet extends HttpServlet {
 
-    private String ERROR_PAGE = "errors.html";
-    private String SHOW_BILL_CONTROLLER = "GetBillServlet";
-
+    //private String ERROR_PAGE = "errors.html";
+    //private String SHOW_BILL_CONTROLLER = "GetBillServlet";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -50,6 +52,10 @@ public class CheckOutFromCartServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties) context.getAttribute("SITEMAPS");
+
         //1. Get all parameter
         String prefixId = "HD";
         String id = "";
@@ -57,7 +63,8 @@ public class CheckOutFromCartServlet extends HttpServlet {
         String address = request.getParameter("txtAddressViewCart");
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        String url = ERROR_PAGE;
+        //String url = ERROR_PAGE;
+        String url = siteMaps.getProperty(ApplicationConstants.CheckOutFeature.ERROR_PAGE);
         try {
             // Customer go to cart place
             HttpSession session = request.getSession(false);//gio hang co the bi timeout do o giao dien client chua refresh ma bi timeout o server
@@ -107,7 +114,8 @@ public class CheckOutFromCartServlet extends HttpServlet {
                             if (updateTotalPriceTo_T_Order) {//da update total vao t_Order
                                 session.removeAttribute("CART");//xoa gio hang
                                 request.setAttribute("IDOFORDER", id);
-                                url = SHOW_BILL_CONTROLLER;
+                                //url = SHOW_BILL_CONTROLLER;
+                                url = siteMaps.getProperty(ApplicationConstants.CheckOutFeature.SHOW_BILL_CONTROLLER);
                             }
                         }
                     }//items has existed

@@ -91,5 +91,15 @@ public class RegistrationCreateError implements Serializable{
         this.usernameIsExisted = usernameIsExisted;
     }
     
+    public void setUsernameLengthError(int min, int max) {
+        this.usernameLengthError = "Username is required typing from " + min + " to " + max + " characters";
+    }
     
+    public void setPasswordLengthError(int min, int max) {
+        this.passwordLengthError = "Password is required typing from " + min + " to " + max + " characters";
+    }
+    
+    public void setFullNameLengthError(int min, int max) {
+        this.fullNameLengthError = "Fullname is required typing from " + min + " to " + max + " characters";
+    }
 }

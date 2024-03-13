@@ -8,10 +8,12 @@ package thinhlvd.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import thinhlvd.registration.RegistrationDAO;
 import thinhlvd.registration.RegistrationDTO;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -44,7 +47,11 @@ public class StartupController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = LOGIN_PAGE;
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties)context.getAttribute("SITEMAPS");
+        
+        String url = siteMaps.getProperty(ApplicationConstants.StartUpFeature.LOGIN_PAGE);;
         try {
 //            //1. check cookies existed
 //            Cookie[] cookies = request.getCookies();
@@ -82,7 +89,7 @@ public class StartupController extends HttpServlet {
                     RegistrationDAO dao = new RegistrationDAO();
                     RegistrationDTO dto = dao.checkLogin(username, password);
                     if (dto != null) {
-                        url = SEARCH_PAGE;
+                        url = siteMaps.getProperty(ApplicationConstants.StartUpFeature.RESULT_PAGE);
                     }//authentication is ok
                 }
             }// session cua nguoi dung ton tai

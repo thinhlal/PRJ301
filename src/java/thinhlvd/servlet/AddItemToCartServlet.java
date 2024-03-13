@@ -32,7 +32,6 @@ import thinhlvd.tbl_Product1.Tbl_Product1DTO;
 public class AddItemToCartServlet extends HttpServlet {
 
     private final String ERROR_PAGE = "errors.html";
-    private final String OUT_OF_STOCK_PAGE = "productQuantityNotEnough.html";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

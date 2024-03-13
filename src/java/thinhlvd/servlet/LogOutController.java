@@ -7,12 +7,15 @@ package thinhlvd.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Properties;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -21,8 +24,9 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "LogOutController", urlPatterns = {"/LogOutController"})
 public class LogOutController extends HttpServlet {
     
-    private final String LOG_IN_PAGE = "login.jsp";
-    private final String ERROR_PAGE = "errors.html";
+    //private final String LOG_IN_PAGE = "login.jsp";
+    //private final String ERROR_PAGE = "errors.html";
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,13 +39,18 @@ public class LogOutController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = ERROR_PAGE;
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties) context.getAttribute("SITEMAPS");
+        
+        //String url = ERROR_PAGE;
+        String url = siteMaps.getProperty(ApplicationConstants.ErrorFeature.ERROR_PAGE);
         
         try {
             HttpSession session = request.getSession(false);
             if(session != null){
                 session.invalidate();
-                url = LOG_IN_PAGE;
+                url = siteMaps.getProperty(ApplicationConstants.LogOutFeature.LOGIN_PAGE);;
             }
         } finally {
             response.sendRedirect(url);

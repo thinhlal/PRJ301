@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import thinhlvd.tbl_Product1.Tbl_Product1DAO;
 import thinhlvd.tbl_Product1.Tbl_Product1DTO;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -28,8 +31,8 @@ import thinhlvd.tbl_Product1.Tbl_Product1DTO;
 @WebServlet(name = "ShowAllProductsServlet", urlPatterns = {"/ShowAllProductsServlet"})
 public class ShowAllProductsServlet extends HttpServlet {
 
-    private final String ERROR_PAGE = "errors.html";
-    private final String PRODUCTS_PAGE = "products.jsp";
+    //private final String ERROR_PAGE = "errors.html";
+    //private final String PRODUCTS_PAGE = "products.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,14 +46,20 @@ public class ShowAllProductsServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = ERROR_PAGE;
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties) context.getAttribute("SITEMAPS");
+        
+        //String url = ERROR_PAGE;
+        String url = siteMaps.getProperty(ApplicationConstants.ErrorFeature.ERROR_PAGE);
         try {
             //1.CALL DAO tblProduct1 (new DAO)
             Tbl_Product1DAO dao = new Tbl_Product1DAO();
             //2.Call method of DAO
             dao.getAllProducts();
             List<Tbl_Product1DTO> products = dao.getProducts();
-            url = PRODUCTS_PAGE;
+            //url = PRODUCTS_PAGE;
+            url = siteMaps.getProperty(ApplicationConstants.GoShoppingFeature.PRODUCTS_PAGE);
             request.setAttribute("PRODUCTS", products);
         } catch (SQLException ex) {
             //ex.printStackTrace();

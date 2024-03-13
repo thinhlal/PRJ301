@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +26,7 @@ import thinhlvd.t_Order.T_OrderDAO;
 import thinhlvd.t_Order.T_OrderDTO;
 import thinhlvd.tbl_Product1.Tbl_Product1DAO;
 import thinhlvd.tbl_Product1.Tbl_Product1DTO;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -31,8 +34,8 @@ import thinhlvd.tbl_Product1.Tbl_Product1DTO;
  */
 @WebServlet(name = "GetBillServlet", urlPatterns = {"/GetBillServlet"})
 public class GetBillServlet extends HttpServlet {
-    private final String ERROR_PAGE = "errors.html";
-    private final String SHOW_BILL = "billCart.jsp";
+    //private final String ERROR_PAGE = "errors.html";
+    //private final String SHOW_BILL = "billCart.jsp";
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,7 +49,12 @@ public class GetBillServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = ERROR_PAGE;
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties) context.getAttribute("SITEMAPS");
+        
+        //String url = ERROR_PAGE;
+        String url = siteMaps.getProperty(ApplicationConstants.GetBillFeature.ERROR_PAGE);
         
         try {
             String id = (String)request.getAttribute("IDOFORDER");//get id of T_order
@@ -64,7 +72,8 @@ public class GetBillServlet extends HttpServlet {
                 request.setAttribute("BILL", getBillInfo);
                 request.setAttribute("LISTITEM", listItemsOrdered);
                 request.setAttribute("LISTPRODUCT", listProductInfor);
-                url = SHOW_BILL;
+                //url = SHOW_BILL;
+                url = siteMaps.getProperty(ApplicationConstants.GetBillFeature.BILL_PAGE);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

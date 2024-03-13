@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.Registration;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import thinhlvd.registration.RegistrationDAO;
 import thinhlvd.registration.RegistrationDTO;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -30,7 +33,7 @@ import thinhlvd.registration.RegistrationDTO;
 public class SearchLastnameServlet extends HttpServlet {
 
     //private final String SEARCH_PAGE = "search.html";
-    private final String RESULT_PAGE = "search.jsp";
+    //private final String RESULT_PAGE = "search.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +47,14 @@ public class SearchLastnameServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties)context.getAttribute("SITEMAPS");
+        
         //1. get all client information
         String searchValue = request.getParameter("txtSearchValue");
-        String url = RESULT_PAGE;
+        String url = siteMaps.getProperty(ApplicationConstants.SearchFeature.RESULT_PAGE);;
 
         try {
             if (!searchValue.trim().isEmpty()) {

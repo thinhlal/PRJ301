@@ -8,15 +8,18 @@ package thinhlvd.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import thinhlvd.registration.RegistrationDAO;
+import thinhlvd.util.ApplicationConstants;
 
 /**
  *
@@ -24,7 +27,7 @@ import thinhlvd.registration.RegistrationDAO;
  */
 @WebServlet(name = "UpdateAccountServlet", urlPatterns = {"/UpdateAccountServlet"})
 public class UpdateAccountServlet extends HttpServlet {
-    private final String ERROR_PAGE = "errors.html";
+    //private final String ERROR_PAGE = "errors.html";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,12 +41,17 @@ public class UpdateAccountServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        //0. get current context and get siteMaps
+        ServletContext context = this.getServletContext();
+        Properties siteMaps = (Properties) context.getAttribute("SITEMAPS");
+        
         //1. Get all parameter
         String username = request.getParameter("txtUsername");
         String password = request.getParameter("txtPassword");
         String isAdmin = request.getParameter("chkAdmin");
         String searchValue = request.getParameter("lastSearchValue");
-        String url = ERROR_PAGE;
+        //String url = ERROR_PAGE;
+        String url = siteMaps.getProperty(ApplicationConstants.DeleteFeature.ERROR_PAGE);
         try {
             //2. Call DAO
             //2.1 New DAO
@@ -51,7 +59,7 @@ public class UpdateAccountServlet extends HttpServlet {
             //2.2 Call method() of DAO
             boolean result = dao.updateAccount(username, password, isAdmin);
             //3. process result
-            if(result){
+            if (result) {
                 // call previous functions again using URL Rewriting technique
                 url = "DispatchServlet"
                         + "?btAction=Search"
