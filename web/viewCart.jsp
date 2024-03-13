@@ -59,6 +59,7 @@
                     </table>
                     Name<input type="text" name="txtNameViewCart" value="" /><br/>
                     Address<input type="text" name="txtAddressViewCart" value="" /><br/>
+                    <font color="red">${requestScope.ERROR_USER}</font><br/>
                     <input type="submit" value="CheckOut" name="btAction" />            
                 </form>
             </c:if>
